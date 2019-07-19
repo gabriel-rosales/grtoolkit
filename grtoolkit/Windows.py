@@ -4,8 +4,6 @@ def deleteThumb():
     os.remove(os.path.dirname(sys.argv[0]) + '\\thummb.db')
 
 
-
-
 def cmd(*args):
     '''Input: string, string, string, ...
     Can run multiple commands to the windows terminal'''

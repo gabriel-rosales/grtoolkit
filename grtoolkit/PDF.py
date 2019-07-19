@@ -1,4 +1,5 @@
 import os, PyPDF2
+from grtoolkit.File import filesInWorkFolder
 
 def join_PDFs(*args):
     """Join all PDFs at folder location or in list of absolute file locations"""

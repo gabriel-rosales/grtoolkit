@@ -6,8 +6,7 @@ import grtoolkit.PDF
 import grtoolkit.Storage
 import grtoolkit.Windows
 
-# @Decorators.timer
-# def main():
-#     pass
+import os, sys
 
-# main()
+def cwd():
+    return os.path.dirname(sys.argv[0])

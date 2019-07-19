@@ -8,7 +8,7 @@ from grtoolkit.Windows import cmdSystem
 
 cmd = list()
 cmd.append(f'cd {cwd}')
-# cmd.append('setup.py sdist bdist_wheel')
-cmd.append('twine upload dist/*')
+cmd.append('setup.py sdist bdist_wheel')
+# cmd.append('twine upload dist/*')
 cmd = cmdSystem(cmd)
 os.system(cmd)

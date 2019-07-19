@@ -32,6 +32,12 @@ class grsFile:
 
         print(self.read())
 
+def replaceWords(textOrFile, dictionary):
+    if os.path.exists(textOrFile):
+        base_text = grsFile(textOrFile).read()
+    for key, val in dictionary.items():
+        base_text = textOrFile.replace(key,val)
+    return base_text
 
 def foldersInFolder(folder, query=""):  # Returns list of files of specified file type
     folder_list = []
@@ -60,20 +66,24 @@ def directoryLastValue(directory):
     return directory.rsplit("\\", 1)[-1]
 
 
-def checkExtension(filePath, ext):  # Compare file extension; returns True/False
+def checkExtension(filePath, ext):
+    '''Compare file extension; returns True/False'''
     return filePath[filePath.rfind(".", 0) : len(filePath)] == correctDotPrefix(ext)
 
 
-def correctExtension(filePath, ext):  # Add file extension if it is incorrect
+def correctExtension(filePath, ext):
+    '''Add file extension if it is incorrect'''
     return (
         filePath if checkExtension(filePath, ext) else filePath + correctDotPrefix(ext)
     )
 
-def correctDotPrefix(string):  # Add dot prefix to file extension if missing
+def correctDotPrefix(string):
+    '''Add dot prefix to file extension if missing'''
     return string if string.find(".") == 0 else "." + string
 
 
-def delDotPrefix(string):  # Delete dot prefix to file extension if present
+def delDotPrefix(string):
+    '''Delete dot prefix to file extension if present'''
     return string[1:] if string.find(".") == 0 else string
 
 def ext(path, dot=True):

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="grtoolkit",
-    version="19.07.6",
+    version="19.07.7",
     author="Gabriel Rosales",
     author_email="gabriel.alejandro.rosales@gmail.com",
     description="Common functions for quick python development",

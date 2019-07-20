@@ -1,7 +1,7 @@
 import os, sys
-import shutil
 from grtoolkit.Decorators import try_pass
 from grtoolkit.Windows import cmd
+from grtoolkit.Storage import deleteDirectory
 
 import requests, json, datetime
 import grtoolkit, re
@@ -52,16 +52,19 @@ def updateSetupVer(setupfile=os.path.dirname(sys.argv[0])+"\\setup.py"):
     newsetup = grtoolkit.File.replaceWords(setup_txt,{currVersion:f'version="{genDateVersion(package)}"'})
     setup.write(newsetup)   #Overwrite setup.py
 
-@try_pass
-def deldir(path):
-    shutil.rmtree(path)
+def Upload2Pypi():
+    if os.path.exists(cwd + "\\setup.py"):
+        deleteDirectory(os.path.dirname(sys.argv[0])+'\\build\\')
+        deleteDirectory(os.path.dirname(sys.argv[0])+'\\dist\\')
+        deleteDirectory(os.path.dirname(sys.argv[0])+'\\__pycache__\\')
 
-deldir(os.path.dirname(sys.argv[0])+'\\build\\')
-deldir(os.path.dirname(sys.argv[0])+'\\dist\\')
-deldir(os.path.dirname(sys.argv[0])+'\\__pycache__\\')
+        updateSetupVer()
 
-updateSetupVer()
+        cmd(f'cd {cwd}', 
+            'python setup.py sdist bdist_wheel',
+            'twine upload dist/*')
+    else:
+        print(f"setup.py not found in {cwd}")
 
-cmd(f'cd {cwd}', 
-    'python setup.py sdist bdist_wheel',
-    'twine upload dist/*')
+if __name__ == "__main__":
+    Upload2Pypi()

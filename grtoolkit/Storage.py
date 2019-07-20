@@ -1,4 +1,5 @@
-import pickle
+import pickle, shutil
+from grtoolkit.Decorators import try_pass
 
 def savePickle(filename, pickle_object):
     outfile = open(filename, 'wb')
@@ -10,3 +11,7 @@ def loadPickle(filename):
     pickle_object = pickle.load(infile)
     infile.close
     return pickle_object
+
+@try_pass
+def deleteDirectory(path):
+    shutil.rmtree(path)

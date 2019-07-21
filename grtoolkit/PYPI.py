@@ -23,7 +23,11 @@ def pypiVersion(package):
 def genDateVersion(package):
     '''Returns a new date version code after comparing with latest Pypi package version online
     Follows the format Year.Month.ReleaseNumber'''
-    currVerSplit = pypiVersion(package).split(".")
+    try:
+        currVerSplit = pypiVersion(package).split(".")
+    except:
+        currVerSplit = "0.0.0".split(".")
+        
     DATE = datetime.datetime.now()
 
     def prefix0str(interger):
@@ -44,7 +48,7 @@ def updateSetupVer(setupfile=os.path.dirname(sys.argv[0])+"\\setup.py"):
     package_regex = re.compile('name=".*"')     
     version_regex = re.compile('version=".*"')
 
-    setup = grtoolkit.File.grsFile(setupfile)
+    setup = grtoolkit.Storage.File(setupfile)
     setup_txt = setup.read()
     package = package_regex.findall(setup_txt)[0].split('"')[1]     #Find package name from setup file
     currVersion = version_regex.findall(setup_txt)[0]               #Find version currently on setup file

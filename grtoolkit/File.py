@@ -2,10 +2,14 @@ import sys, re, os, math, functools, time, PyPDF2
 from grtoolkit.Storage import File
 
 def replaceWords(textOrFile, dictionary):
+    base_text = textOrFile
     if os.path.exists(textOrFile):
         base_text = File(textOrFile).read()
     for key, val in dictionary.items():
-        base_text = textOrFile.replace(key,val)
+        try:
+            base_text = base_text.replace(key,val)
+        except:
+            pass
     return base_text
 
 def foldersInFolder(folder, query=""):  # Returns list of files of specified file type
@@ -17,7 +21,7 @@ def foldersInFolder(folder, query=""):  # Returns list of files of specified fil
     return folder_list
 
 
-def filesInFolder(folder, fileType):  # Returns list of files of specified file type
+def filesInFolder(folder, fileType="*"):  # Returns list of files of specified file type
     fileType = delDotPrefix(fileType)
     file_regex = re.compile(
         r".*\." + fileType, re.IGNORECASE

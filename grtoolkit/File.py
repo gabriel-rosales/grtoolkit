@@ -1,41 +1,9 @@
 import sys, re, os, math, functools, time, PyPDF2
-
-# class grsFile:
-#     #TO BE DEPRECIATED
-#     def __init__(self, fileName):
-#         self.fileName = fileName
-
-#     def write(self, content):
-#         """Overwrites to file - deletes what was there before
-#         If file did not exist it creates a file"""
-
-#         f = open(self.fileName, "w")
-#         f.write(content)
-#         f.close()
-
-#     def append(self, content, newline=True):
-#         """Appends content to existing file"""
-
-#         f = open(self.fileName, "a")
-#         f.write("\n" + content) if newline else f.write(content)
-#         f.close()
-
-#     def read(self):
-#         """Returns existing file content"""
-
-#         f = open(self.fileName)
-#         t = f.read()
-#         f.close
-#         return t
-
-#     def print(self):
-#         """Prints existing file content"""
-
-#         print(self.read())
+from grtoolkit.Storage import File
 
 def replaceWords(textOrFile, dictionary):
     if os.path.exists(textOrFile):
-        base_text = grsFile(textOrFile).read()
+        base_text = File(textOrFile).read()
     for key, val in dictionary.items():
         base_text = textOrFile.replace(key,val)
     return base_text
@@ -49,7 +17,7 @@ def foldersInFolder(folder, query=""):  # Returns list of files of specified fil
     return folder_list
 
 
-def filesInWorkFolder(folder, fileType):  # Returns list of files of specified file type
+def filesInFolder(folder, fileType):  # Returns list of files of specified file type
     fileType = delDotPrefix(fileType)
     file_regex = re.compile(
         r".*\." + fileType, re.IGNORECASE

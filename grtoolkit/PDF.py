@@ -1,11 +1,11 @@
 import os, PyPDF2
-from grtoolkit.File import filesInWorkFolder
+from grtoolkit.File import filesInFolder
 
 def join_PDFs(*args):
     """Join all PDFs at folder location or in list of absolute file locations"""
 
     if os.path.exists(args[0]):
-        PDFs = filesInWorkFolder(args[0], ".pdf")
+        PDFs = filesInFolder(args[0], ".pdf")
     elif isinstance(args[0], list):
         PDFs = args[0]
     else:

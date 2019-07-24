@@ -1,4 +1,4 @@
-import pickle, shutil
+import pickle, shutil, os
 from grtoolkit.Decorators import try_pass
 
 def savePickle(filename, pickle_object):
@@ -47,3 +47,25 @@ class File:
         """Prints existing file content"""
 
         print(self.read())
+
+def search(rootFolder, searchType="fr", viewPrint=False, rootInclude=False):
+    '''File, Subfolder os.walk tool
+
+searchType options:
+    f - files, parent folder only
+    fr - files, recursive
+    sf - subfolders, parent folder only
+    sfr - subfolder, recursive'''
+    files_parentOnly = list(); subfolders_parentOnly = list()
+    files_recursive = list(); subfolders_recursive = list()
+    depth = 1
+
+    for root, subfolders, files in os.walk(rootFolder):
+        if viewPrint:
+            print("Parent Directory:"); print(root)
+            print("Subfolders:"); print(subfolders)
+            print("Files"); print(files)
+
+        if depth == 1:
+            files_parentOnly = map(lambda x:f"{root}\\{x}",files)
+    

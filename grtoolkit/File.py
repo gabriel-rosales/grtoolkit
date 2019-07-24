@@ -2,6 +2,7 @@ import sys, re, os, math, functools, time, PyPDF2
 from grtoolkit.Storage import File
 
 def replaceWords(textOrFile, dictionary):
+    '''Replace words in content by dictionary keys and values'''
     base_text = textOrFile
     if os.path.exists(textOrFile):
         base_text = File(textOrFile).read()
@@ -12,7 +13,8 @@ def replaceWords(textOrFile, dictionary):
             pass
     return base_text
 
-def foldersInFolder(folder, query=""):  # Returns list of files of specified file type
+def foldersInFolder(folder, query=""):  
+    '''Returns list of files of specified file type'''
     folder_list = []
     for _, subfolders, _ in os.walk(folder):  # folders, subfolders, filenames
         for sub in subfolders:
@@ -21,7 +23,8 @@ def foldersInFolder(folder, query=""):  # Returns list of files of specified fil
     return folder_list
 
 
-def filesInFolder(folder, fileType="*"):  # Returns list of files of specified file type
+def filesInFolder(folder, fileType="*"):  
+    '''Returns list of files of specified file type'''
     fileType = delDotPrefix(fileType)
     file_regex = re.compile(
         r".*\." + fileType, re.IGNORECASE
@@ -36,11 +39,12 @@ def filesInFolder(folder, fileType="*"):  # Returns list of files of specified f
 
 
 def directoryLastValue(directory):
+    '''Returns the last value in the directory'''
     return directory.rsplit("\\", 1)[-1]
 
 
 def checkExtension(filePath, ext):
-    '''Compare file extension; returns True/False'''
+    '''CompareS file extension; returns True/False'''
     return filePath[filePath.rfind(".", 0) : len(filePath)] == correctDotPrefix(ext)
 
 
@@ -60,13 +64,16 @@ def delDotPrefix(string):
     return string[1:] if string.find(".") == 0 else string
 
 def ext(path, dot=True):
+    '''Extracts extension from file name'''
     if dot:
         return path[path.rfind(".", 0) : len(path)]
     else:
         return path[path.rfind(".", 0) + 1 : len(path)]
 
 def name(path):
+    '''Extracts file name without extension'''
     return path[: path.rfind(".", 0)]
 
 if __name__ == "__main__":
-    pass
+
+    print(ext("cookie.py"))

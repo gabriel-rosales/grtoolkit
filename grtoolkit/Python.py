@@ -14,3 +14,12 @@ def packagePath(package):
 
 def packageDir(package):
     return os.path.dirname(packagePath(package))
+
+
+def runPipenv(path, *args, **kwargs):
+    execCommand = f"pipenv run python {path}"
+    for arg in args:
+        execCommand+= f" {arg}"
+    for kwarg in kwargs:
+        execCommand+= f" {kwarg}"
+    os.system(execCommand)

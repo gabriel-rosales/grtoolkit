@@ -1,7 +1,7 @@
-import sys, re, os, math, functools, time, PyPDF2
-from grtoolkit.Storage import File
+import sys, re, os, math, functools, time
 
 def replaceWords(textOrFile, dictionary):
+    from grtoolkit.Storage import File
     '''Replace words in content by dictionary keys and values'''
     base_text = textOrFile
     if os.path.exists(textOrFile):
@@ -75,5 +75,4 @@ def name(path):
     return path[: path.rfind(".", 0)]
 
 if __name__ == "__main__":
-
-    print(ext("cookie.py"))
+    pass

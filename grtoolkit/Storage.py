@@ -1,4 +1,4 @@
-import pickle, shutil, os
+import pickle, shutil, os, re
 from grtoolkit.Decorators import try_pass
 from grtoolkit.File import directoryLastValue
 
@@ -96,3 +96,13 @@ ARGUMENTS:
             folders_recursive = list(map(lambda x:directoryLastValue(x),folders_recursive))
 
     return folders_recursive, files_recursive
+
+def regexList(unfilteredList, regex):
+    '''Returns list filtered by regex'''
+    item_regex = re.compile(regex, re.IGNORECASE)  # Regular Expression; dot star means find everything
+    filteredList = list()
+    for item in unfilteredList:
+        filtering = item_regex.findall(item)
+        if filtering:
+            filteredList.append(item)
+    return filteredList

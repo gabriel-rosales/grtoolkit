@@ -39,6 +39,10 @@ def cross_entropy(Y, P):
     P = np.float_(P)
     return -np.sum(Y * np.log(P) + (1 - Y) * np.log(1 - P))
 
+def multi_class_cross_entropy():
+    pass
+
 w1 = 3; w2=5; b=-2.2
 x = sigmoid(w1*.4 + w2*.6 + b)
 print(x)
+

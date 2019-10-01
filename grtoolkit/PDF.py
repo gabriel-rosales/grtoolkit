@@ -22,7 +22,7 @@ def join_PDFs(*args):
                 writer.addPage(page)
         except:
             pass
-    outputFile = open(args[0] + "\\" + "Joined_PDF.pdf", "wb")
+    outputFile = open(args[0] + "\\" + "JOINED_PDF.pdf", "wb")
     writer.write(outputFile)
     outputFile.close()
     pdfFile.close()

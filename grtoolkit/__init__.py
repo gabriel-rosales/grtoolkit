@@ -2,7 +2,9 @@ import grtoolkit.Decorators
 import grtoolkit.File
 import grtoolkit.Format
 # import grtoolkit.Hardcode
+import grtoolkit.Heat
 import grtoolkit.Math
+import grtoolkit.Mechanics
 import grtoolkit.PDF
 import grtoolkit.Python
 import grtoolkit.Storage

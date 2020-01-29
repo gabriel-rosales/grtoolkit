@@ -1,4 +1,5 @@
 import math
+from sympy import *
 
 def minPulleys(load_weight, pull_weight, Safety_factor, exact=False):
 ### Pull_weight = load_weight/(2**(n-1)) where load_weight is the heavier load.
@@ -9,3 +10,8 @@ def minPulleys(load_weight, pull_weight, Safety_factor, exact=False):
     return math.ceil(math.log(load_weight/pull_weight)/math.log(2))
 
 # print(minPulleys(100,10,1, exact=True))
+
+def force()
+    f, m, a = symbols("f m a")
+    # solveset(Eq(f,m*a),f)
+    exp = m*a/f

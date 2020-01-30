@@ -1,4 +1,5 @@
 import math, numpy as np
+from sympy import *
 
 def roundSig(x, sig=5):
     if x == 0:
@@ -39,10 +40,55 @@ def cross_entropy(Y, P):
     P = np.float_(P)
     return -np.sum(Y * np.log(P) + (1 - Y) * np.log(1 - P))
 
-def multi_class_cross_entropy():
-    pass
+def algebraSolve(expr, solve_for, **kwargs):
+    """Solves algebraic string equation. 
+    format: algebraSolve("x**2 + 3*x - 1/2 + y", "x", y=24)
+    **"""
+    expr=sympify(expr)
+    #GENERATE VARIABLE SYMBOLS FROM EXPRESSION
+    for sym in expr.free_symbols: 
+        exec(f"{sym.name}=symbols('{sym.name}')")
+        #MAKE solve_for STRING EQUAL REQUIRED EXPRESSION VARIABLE SYMBOL
+        if solve_for == sym.name:    
+            solve_for = sym
+        
+        # SUBSTITUTE KARGs FOR EXPRESSION SYMBOLS
+        for k, v in kwargs.items():
+            if k == sym.name:
+                expr=expr.subs(k,v)
+    return solve(expr, solve_for)
 
-w1 = 3; w2=5; b=-2.2
-x = sigmoid(w1*.4 + w2*.6 + b)
-print(x)
+def solveEqs(eq, find, **kwargs):
+    #CREATE SET OF ARGUMENTS SUPPLIED TO FUNCTION
+    availSet = {find}
+    for k in kwargs.keys():
+        availSet.add(k)
+    eq = [sympify(expr) for expr in eq]
+    freesym = [expr.free_symbols for expr in eq]
+    freevar = []
+    solution = list()
+    #CONVERT LIST OF SETS OF SYMBOLS INTO LIST OF SETS OF STR
+    for freeset in freesym:
+        tempset = set()
+        for sym in freeset:
+            tempset.add(sym.name)
+        freevar.append(tempset)
+    unknowns = [freeset-availSet for freeset in freevar]            # Eliminate variables requested in function arguments: find and knowns
+    unknowns_count = [len(unknownset) for unknownset in unknowns]   # How many unknowns are left in each equation?
+    find_avail = [find in freevarset for freevarset in freevar]     # Is the variable in question available in this equation?
+    index = list(range(len(unknowns_count)))
+    zipper = list(zip(index, unknowns_count, find_avail))
 
+    # # REMOVE EQUATIONS THAT ARENT USEFUL
+    # for zippedList in zipper:
+    #     if zippedList[2] == False:
+    #         zipper.remove(zippedList)
+
+    for zippedList in zipper:
+        solution.append(algebraSolve(eq[zippedList[0]],find, **kwargs))
+    return solution
+
+def printEquations(eq):
+    print("Equations:\n")
+    for equation in eq:
+        print(equation)

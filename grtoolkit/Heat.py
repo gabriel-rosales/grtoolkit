@@ -1,5 +1,5 @@
 import pyodbc, os, sys
-from MSAccess import SQLQuery
+from grtoolkit.MSAccess import SQLQuery
 
 PropertyTables = os.path.dirname(sys.argv[0]) + "\\PropertyTables.accdb"
 PT = PropertyTables

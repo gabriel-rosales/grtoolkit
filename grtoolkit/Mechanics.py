@@ -1,5 +1,6 @@
 import math
 from sympy import *
+from grtoolkit.Math import *
 
 def minPulleys(load_weight, pull_weight, Safety_factor, exact=False):
 ### Pull_weight = load_weight/(2**(n-1)) where load_weight is the heavier load.
@@ -11,7 +12,26 @@ def minPulleys(load_weight, pull_weight, Safety_factor, exact=False):
 
 # print(minPulleys(100,10,1, exact=True))
 
-def force()
-    f, m, a = symbols("f m a")
-    # solveset(Eq(f,m*a),f)
-    exp = m*a/f
+def forceEq(find, **kwargs):
+    """variables: f=force, m=mass, a=acceleration"""
+    return algebraSolve("Eq(f,m*a)", find, **kwargs)
+
+def kinematicsEq(find, printEq=False, **kwargs):
+    """variables: 
+                d=distance, d0=initial distance, 
+                v=velocity, v0=initial velocity, 
+                a=acceleration, 
+                t=time"""
+    eq = list()
+    eq.append("Eq(d, v*t)")
+    eq.append("Eq(v, v0 + a*t)")
+    eq.append("Eq(d, d0 + v0*t + 0.5*a*t**2)")
+    eq.append("Eq(d, d0 + v*t - 0.5*a*t**2)")
+    eq.append("Eq(v**2, v0**2 + 2*a*d)")
+    
+    solution = solveEqs(eq, find, **kwargs)
+    
+    if printEq:
+        printEquations(eq)
+        printEquations(solution)
+    return solution

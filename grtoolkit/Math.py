@@ -89,6 +89,6 @@ def solveEqs(eq, find, **kwargs):
     return solution
 
 def printEquations(eq):
-    print("Equations:\n")
+    # print("Equations:\n")
     for equation in eq:
         print(equation)

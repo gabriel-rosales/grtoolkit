@@ -1,6 +1,7 @@
 import math
-from sympy import *
-from grtoolkit.Math import *
+# from sympy import *
+# from grtoolkit.Math import *
+from grtoolkit.Math import solveEqs, printEquations, algebraSolve
 
 def minPulleys(load_weight, pull_weight, Safety_factor, exact=False):
 ### Pull_weight = load_weight/(2**(n-1)) where load_weight is the heavier load.
@@ -10,7 +11,11 @@ def minPulleys(load_weight, pull_weight, Safety_factor, exact=False):
         return math.log(load_weight/pull_weight)/math.log(2)
     return math.ceil(math.log(load_weight/pull_weight)/math.log(2))
 
-# print(minPulleys(100,10,1, exact=True))
+def magnitude(*args):
+    for arg in *args:
+        square_sum += arg**2
+    return math.sqrt(square_sum)
+     
 
 def forceEq(find, **kwargs):
     """variables: f=force, m=mass, a=acceleration"""
@@ -32,6 +37,10 @@ def kinematicsEq(find, printEq=False, **kwargs):
     solution = solveEqs(eq, find, **kwargs)
     
     if printEq:
-        printEquations(eq)
-        printEquations(solution)
+        print("Equations"), printEquations(eq), print("\n")
+        print("Solutions"), printEquations(solution), print("\n")
     return solution
+
+    def projectileMotion(v0, angle, time):
+        x = v0*math.cos(math.radians())
+

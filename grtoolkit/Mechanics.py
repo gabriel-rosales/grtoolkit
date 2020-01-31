@@ -1,4 +1,7 @@
 import math
+from math import radians, degrees
+import scipy
+
 # from sympy import *
 # from grtoolkit.Math import *
 from grtoolkit.Math import solveEqs, printEquations, algebraSolve
@@ -41,6 +44,40 @@ def kinematicsEq(find, printEq=False, **kwargs):
         print("Solutions"), printEquations(solution), print("\n")
     return solution
 
-    def projectileMotion(v0, angle, time):
-        x = v0*math.cos(math.radians())
+def projectileMotionEq(find, g=scipy.constants.g, angleUnit="radians", printEq=False, **kwargs):
+    """variables: 
+            x=position-along-x, y=position-along-y,
+            alpha0=original trajectory angle,
+            t=time, g=standard acceleration of gravity
+            vx=velocity-along-x, vy=velocity-along-y"""
+    # If degree provided, convert to radians to equations then convert answer to degrees
+    alpha0 = radians(alpha0) if angleUnit=="degrees" else alpha0
+    # x = (v0*math.cos(alpha0))*t
+    # y = (v0*math.sin(alpha0))*t - 0.5*g*t**2
+    # vx = v0*cos(alpha0)
+    # vy = v0*sin(alpha0)-g*t
+
+    # if find=alpha0 then convert to degrees
+
+def projectileMotion2D(v0, alpha0, t, g=scipy.constants.g, angleUnit="radians"):
+    """variables: 
+            x=position-along-x, y=position-along-y,
+            alpha0=original trajectory angle,
+            t=time, g=standard acceleration of gravity
+            vx=velocity-along-x, vy=velocity-along-y
+    Returns x,y,vx,vy"""
+    alpha0 = radians(alpha0) if angleUnit=="degrees" else alpha0
+    x=algebraSolve("Eq(x,(v0*math.cos(alpha0))*t)","x",v0=v0, alpha0=alpha0, t=t, g=scipy.constants.g)
+    y=algebraSolve("Eq(y,(v0*math.sin(alpha0))*t - 0.5*g*t**2)","y",v0=v0, alpha0=alpha0, t=t, g=scipy.constants.g)
+    vx=algebraSolve("Eq(vx,v0*cos(alpha0))","vx",v0=v0, alpha0=alpha0, t=t, g=scipy.constants.g)
+    vy=algebraSolve("Eq(vy,v0*sin(alpha0)-g*t","vy",v0=v0, alpha0=alpha0, t=t, g=scipy.constants.g)
+    # x = (v0*math.cos(alpha0))*t
+    # y = (v0*math.sin(alpha0))*t - 0.5*g*t**2
+    # vx = v0*cos(alpha0)
+    # vy = v0*sin(alpha0)-g*t   
+    return x,y,vx,vy
+
+print(x,y,)
+
+
 

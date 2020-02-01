@@ -2,6 +2,7 @@ import math
 from math import radians, degrees
 import scipy.constants
 from sympy import diff
+from grtoolkit.Python import dictionary_add_modify
 
 # from sympy import *
 # from grtoolkit.Math import *
@@ -33,62 +34,68 @@ def kinematicsEq(find, printEq=False, **kwargs):
                 t=time"""
     eq = list()
     eq.append("Eq(d, v*t)")
-    eq.append("Eq(v, v0 + a*t)")
-    eq.append("Eq(d, d0 + v0*t + 0.5*a*t**2)")
+    eq.append("Eq(v, v0 + a*t)")                #constant x-acceleration only
+    eq.append("Eq(d, d0 + v0*t + 0.5*a*t**2)")  #constant x-acceleration only
     eq.append("Eq(d, d0 + v*t - 0.5*a*t**2)")
     eq.append("Eq(v**2, v0**2 + 2*a*d)")
-    
-    solution = solveEqs(eq, find, **kwargs)
-    if printEq:
-        print("Equations"), printEquations(eq), print("\n")
-        print("Solutions"), printEquations(solution), print("\n")
-    return solution
+    return solveEqs(eq, find, printEq=printEq, **kwargs)
 
-def projectileMotionEq(find=False, g=scipy.constants.g, angleUnit="radians", printEq=False, **kwargs):
+def projectileMotionEq(find=False, angleUnitRadians=True, printEq=False, **kwargs):
     """variables: 
             x=position-along-x, y=position-along-y,
             alpha0=original trajectory angle,
             t=time, g=standard acceleration of gravity
-            vx=velocity-along-x, vy=velocity-along-y"""
-    try:
-        alpha0 = radians(alpha0) if angleUnit=="degrees" else alpha0
-    except:
-        pass
+            vx=velocity-along-x, vy=velocity-along-y
+            
+        Note:
+            Angle solution in radians"""
 
+    if not(angleUnitRadians):
+        dictionary_add_modify(kwargs,alpha0=radians(kwargs["alpha0"]))
+    if not("g" in kwargs):
+        dictionary_add_modify(kwargs,g=scipy.constants.g)
+
+    posx="v0*cos(alpha0)*t"
+    posy="v0*sin(alpha0)*t - 0.5*g*t**2"
     eq = list()
-    eq.append("Eq(x,(v0*cos(alpha0))*t)")
-    eq.append("Eq(y,(v0*sin(alpha0))*t - 0.5*g*t**2)")
-    eq.append("Eq(vx,v0*cos(alpha0))")
-    eq.append("Eq(vy,v0*sin(alpha0)-g*t)")
-    eq.append("Eq(ax,diff(((v0*cos(alpha0))*t),t))")
-    eq.append("Eq(ay,diff(((v0*sin(alpha0))*t - 0.5*g*t**2),t))")
-    
-    solution = solveEqs(eq, find, **kwargs)
-    if printEq:
-        print("Equations"), printEquations(eq), print("\n")
-        print("Solutions"), printEquations(solution), print("\n")
-    return solution
+    eq.append(f"Eq(x,{posx})")
+    eq.append(f"Eq(y,{posy})")
+    eq.append(f"Eq(vx,diff({posx},t))")
+    eq.append(f"Eq(vy,diff({posy},t))")
+    eq.append(f"Eq(ax,diff({posx},t,t))")
+    eq.append(f"Eq(ay,diff({posy},t,t))")
+    return solveEqs(eq, find, printEq=printEq, **kwargs)
 
-def projectileMotion2D(v0, alpha0, t, angleUnit="radians"):
+def projectileMotion2D(v0, alpha0, t, angleUnitRadians=True):
+    """Quick version of projectile motion
+    returns [x,y,vx,vy]"""
     g = scipy.constants.g
-    alpha0 = radians(alpha0) if angleUnit=="degrees" else alpha0
+    alpha0 = radians(alpha0) if not(angleUnitRadians) else alpha0
     x=(v0*math.cos(alpha0))*t
     y=(v0*math.sin(alpha0))*t - 0.5*g*t**2
     vx=v0*math.cos(alpha0)
     vy=v0*math.sin(alpha0)-g*t
     return x, y, vx, vy
 
-# print(projectileMotionEq(angleUnit="degrees", alpha0=30, t=10, v0=10))
-time = 0
-for time in range(10):
-    x, y, vx, vy = projectileMotion2D(
-                            v0=80,
-                            alpha0=45,
-                            t=time,
-                            angleUnit="degrees")
-    print("x",x,"y", y,"vx", vx,"vy", vy)
+def a_rad(v_rad,R):
+    """
+    Usage: acceleration for uniform circular motion
 
-projectileMotionEq(find="x", g=9.81, angleUnit=45, printEq=True, alpha0=45, t=16)
+    Variables: 
+        v_rad=radial velocity
+        R = radius"""
+    return v_rad**2/R
 
+def v_rad(R,T):
+    """
+    Usage: velocity for uniform circular motion
+
+    Variables: 
+        T = period
+        R = radius"""
+    return 2*math.pi*R/T
+
+if __name__ == "__main__":
+    pass
 
 

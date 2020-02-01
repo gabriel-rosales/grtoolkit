@@ -6,6 +6,10 @@ def roundSig(x, sig=5):
         return 0
     return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
 
+def delta(p1,p2):
+
+    return abs(p2-p1)
+
 def softmax(L):
     '''Function that takes as input a list of numbers, and returns the list of values given by the softmax function.
     
@@ -40,7 +44,7 @@ def cross_entropy(Y, P):
     P = np.float_(P)
     return -np.sum(Y * np.log(P) + (1 - Y) * np.log(1 - P))
 
-def algebraSolve(expr, solve_for, **kwargs):
+def algebraSolve(expr, solve_for,**kwargs):
     """Solves algebraic string equation. 
     format: algebraSolve("x**2 + 3*x - 1/2 + y", "x", y=24)
     **"""
@@ -58,7 +62,7 @@ def algebraSolve(expr, solve_for, **kwargs):
                 expr=expr.subs(k,v)
     return solve(expr, solve_for)
 
-def solveEqs(eq, find, **kwargs):
+def solveEqs(eq, find, printEq=False, **kwargs):
     #CREATE SET OF ARGUMENTS SUPPLIED TO FUNCTION
     availSet = {find}
     for k in kwargs.keys():
@@ -81,9 +85,17 @@ def solveEqs(eq, find, **kwargs):
 
     for zippedList in zipper:
         solution.append(algebraSolve(eq[zippedList[0]],find, **kwargs))
+
+    printEquationsSolution(eq, solution) #print Equations and Solutions to console
     return solution
 
 def printEquations(eq):
     # print("Equations:\n")
     for equation in eq:
         print(equation)
+
+def printEquationsSolution(eq, solution, printEq=True):
+    #if printEq:
+    print("\n")
+    print("Equations"), printEquations(eq), print("\n")
+    print("Solutions"), printEquations(solution), print("\n")

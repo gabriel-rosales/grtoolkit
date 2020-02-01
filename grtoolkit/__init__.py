@@ -11,7 +11,11 @@ import grtoolkit.Python
 import grtoolkit.Storage
 import grtoolkit.Windows
 
-import os, sys
+# import grtoolkit.Subclass
 
+
+#### EASY ACCESSS FUNCTIONS
+
+import os, sys
 def cwd():
     return os.path.dirname(sys.argv[0])

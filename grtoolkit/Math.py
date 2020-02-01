@@ -79,11 +79,6 @@ def solveEqs(eq, find, **kwargs):
     index = list(range(len(unknowns_count)))
     zipper = list(zip(index, unknowns_count, find_avail))
 
-    # # REMOVE EQUATIONS THAT ARENT USEFUL
-    # for zippedList in zipper:
-    #     if zippedList[2] == False:
-    #         zipper.remove(zippedList)
-
     for zippedList in zipper:
         solution.append(algebraSolve(eq[zippedList[0]],find, **kwargs))
     return solution

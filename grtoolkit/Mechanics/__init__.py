@@ -1,5 +1,6 @@
 # CONNECT LIBRARIES
 import grtoolkit.Mechanics.CircularMotion
+import grtoolkit.Mechanics.Collisions
 import grtoolkit.Mechanics.Friction
 import grtoolkit.Mechanics.Kinematics
 import grtoolkit.Mechanics.ProjectileMotion
@@ -92,6 +93,16 @@ def powerEq(find, printEq=False, **kwargs):
     eq.append("Eq(P, F*v)")
     return solveEqs(eq, find, printEq=printEq, **kwargs)
 
+def centerOfMass(*args):
+    """input: [m, x, y, z, r]
+       variables: m=mass, x=x, y=y, z=z, r=radius"""
+    mi=0; xi=1; yi=2; zi=3; ri=4
+    m_total = sum([item[mi] for item in args])
+    x = sum([item[mi]*item[xi] for item in args])/m_total
+    y = sum([item[mi]*item[yi] for item in args])/m_total
+    z = sum([item[mi]*item[zi] for item in args])/m_total
+    r = sum([item[mi]*item[ri] for item in args])/m_total
+    return x,y,z,r
+
 if __name__ == "__main__":
     pass
-

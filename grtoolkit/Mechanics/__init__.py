@@ -38,7 +38,8 @@ def momentumEq(find, printEq=False, **kwargs):
 
 def impulseEq(find, printEq=False, **kwargs):
     """variables: 
-                J=impulse  p1,p2=initial,final momentum
+                J=impulse  
+                p1,p2=initial,final momentum
                 F=sum of all forces
                 t,t0,t1 = time initial,final
         Usage: The change in momentum of a particle during a time interval
@@ -49,7 +50,8 @@ def impulseEq(find, printEq=False, **kwargs):
     return solveEqs(eq, find, printEq=printEq, **kwargs)
 
 def weight(m,g=scipy.constants.g):
-    """variables: m=mass  g=gravitational acceleration constant (9.81 m/s**2)"""
+    """variables: m=mass  
+                  g=gravitational acceleration constant (9.81 m/s**2)"""
     return m*g
 
 def kineticEnergy(mass,velocity):
@@ -95,7 +97,11 @@ def powerEq(find, printEq=False, **kwargs):
 
 def centerOfMass(*args):
     """input: [m, x, y, z, r]
-       variables: m=mass, x=x, y=y, z=z, r=radius"""
+       variables: m=mass, 
+                  x=position-along-x, 
+                  y=position-along-y, 
+                  z=position-along-z, 
+                  r=position-along-radius"""
     mi=0; xi=1; yi=2; zi=3; ri=4
     m_total = sum([item[mi] for item in args])
     x = sum([item[mi]*item[xi] for item in args])/m_total
@@ -103,6 +109,21 @@ def centerOfMass(*args):
     z = sum([item[mi]*item[zi] for item in args])/m_total
     r = sum([item[mi]*item[ri] for item in args])/m_total
     return x,y,z,r
+
+def centerOfMassMotion(*args):
+    """input: [m, vx, vy, vz, vr]
+       variables: m=mass, 
+                  vx=velocity-along-x, 
+                  vy=velocity-along-y, 
+                  vz=velocity-along-z, 
+                  vr=velocity-along-radius"""
+    mi=0; vxi=1; vyi=2; vzi=3; vri=4
+    m_total = sum([item[mi] for item in args])
+    vx = sum([item[mi]*item[vxi] for item in args])/m_total
+    vy = sum([item[mi]*item[vyi] for item in args])/m_total
+    vz = sum([item[mi]*item[vzi] for item in args])/m_total
+    vr = sum([item[mi]*item[vri] for item in args])/m_total
+    return vx,vy,vz,vr
 
 if __name__ == "__main__":
     pass

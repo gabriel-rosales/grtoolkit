@@ -1,3 +1,4 @@
+import grtoolkit.Circuits
 import grtoolkit.Decorators
 import grtoolkit.Economics
 import grtoolkit.File

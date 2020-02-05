@@ -1,4 +1,5 @@
 import grtoolkit.Circuits.Filters
+import grtoolkit.Circuits.OpAmps
 import grtoolkit.Circuits.Transistors
 
 from grtoolkit.Math import solveEqs
@@ -30,6 +31,16 @@ def Resistance(find, printEq=False, **kwargs):
                 A=cross sectional area"""
     eq = list()
     eq.append("Eq(R,p*l/A)")    
+    return solveEqs(eq, find, printEq=printEq, **kwargs)
+
+def Capacitance(find="C", printEq=False, **kwargs):
+    """variables: 
+                C = capacitance
+                epsilon = permitivity of the dielectric material between plates
+                A = surface area of each plate
+                d = distance between plates"""
+    eq = list()
+    eq.append("Eq(C,epsilon*A/d)")    
     return solveEqs(eq, find, printEq=printEq, **kwargs)
 
 def KCL(i_list):
@@ -113,4 +124,14 @@ def meshAnalysis():
     print("""
         Sum of all voltages in a node""")
 
+def sourceTransformation():
+    # TO BE REVIEWED
+    pass
 
+def TheveninNorton():
+    # TO BE REVIEWED
+    pass
+
+def maximumPowerTransfer():
+    # TO BE REVIEWED
+    pass

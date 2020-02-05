@@ -1,3 +1,4 @@
+import grtoolkit.Circuits.AC
 import grtoolkit.Circuits.Filters
 import grtoolkit.Circuits.OpAmps
 import grtoolkit.Circuits.Transistors
@@ -34,7 +35,11 @@ def Resistance(find, printEq=False, **kwargs):
     return solveEqs(eq, find, printEq=printEq, **kwargs)
 
 def Capacitance(find="C", printEq=False, **kwargs):
-    """variables: 
+    """
+    Usage: the ratio of the charge on one plate of a capacitor to the voltage difference between the two plates, measured in farads (F).
+
+
+    variables: 
                 C = capacitance
                 epsilon = permitivity of the dielectric material between plates
                 A = surface area of each plate

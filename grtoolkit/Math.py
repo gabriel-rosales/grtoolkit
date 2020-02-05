@@ -99,3 +99,16 @@ def printEquationsSolution(eq, solution, printEq=True):
     print("\n")
     print("Equations"), printEquations(eq), print("\n")
     print("Solutions"), printEquations(solution), print("\n")
+
+def solveEqSimultaneously():
+    # Sympy Review https://docs.sympy.org/latest/modules/solvers/solvers.html
+# Solve the following system:
+
+#    x + 4 y ==  2
+# -2 x +   y == 14
+
+# system = Matrix(( (1, 4, 2), (-2, 1, 14)))
+
+# solve_linear_system(system, x, y)
+# {x: -6, y: 2}
+    pass

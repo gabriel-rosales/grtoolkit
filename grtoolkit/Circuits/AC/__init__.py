@@ -16,4 +16,5 @@ def Capacitor(find, printEq=False, **kwargs):
     eq.append("Eq(C,epsilon*A*d)")
     eq.append("Eq(w,0.5*C*v**2)") # if capacitor previously discharged
     eq.append("Eq(w,integrate(C*v,(v,v0,v1)))")
+    eq.append("Eq(w,q**2/(2*C))")
     return solveEqs(eq, find, printEq=printEq, **kwargs)

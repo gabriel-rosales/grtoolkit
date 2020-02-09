@@ -125,5 +125,39 @@ def centerOfMassMotion(*args):
     vr = sum([item[mi]*item[vri] for item in args])/m_total
     return vx,vy,vz,vr
 
+def stress(f_normal,A):
+    """variables:
+            sigma=stress
+            f_normal=force
+            a=area"""
+    sigma = f_normal/A
+    return sigma
+
+def shearStress(f_parallel,A):
+    """variables:
+            sigma=stress
+            f=force
+            a=area"""
+    sigma = f_parallel/A
+    return sigma
+    
+def strain(dl,l0):
+    """variables:
+            epsilon=strain
+            dl=change in length
+            l0=initial length"""
+    epsilon = dl/l0
+    return epsilon
+
+def YoungsModulusEq(find="Y", printEq=False, **kwargs):
+    """variables: 
+            Y=young's modulus of elasticity
+            sigma=stress
+            epsilon=strain
+    """
+    eq = list()
+    eq.append("Eq(Y, sigma/epsilon)")
+    return solveEqs(eq, find, printEq=printEq, **kwargs)
+
 if __name__ == "__main__":
     pass

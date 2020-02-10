@@ -1,6 +1,12 @@
 import math, numpy as np
 from sympy import *
 
+def magnitude(*args):
+    square_sum = 0
+    for arg in args:
+        square_sum += arg**2
+    return math.sqrt(square_sum)
+
 def roundSig(x, sig=5):
     if x == 0:
         return 0

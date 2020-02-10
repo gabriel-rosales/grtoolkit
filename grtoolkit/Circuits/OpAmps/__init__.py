@@ -1,4 +1,4 @@
-# An op amp is an active circuit element designed to perform mathematical operations of addition, subtraction, multiplication, division, dif￾ferentiation, and integration.
+# An op amp is an active circuit element designed to perform mathematical operations of addition, subtraction, multiplication, division, differentiation, and integration.
 
 from grtoolkit.Math import solveEqs
 
@@ -10,7 +10,9 @@ def invertingAmplifier(find="v_out", printEq=False, **kwargs):
     """variables: 
                 v_out, v_in = voltage out/in
                 R2, R1 = resistors (view reference image)
-                """
+
+    .. image:: OpAmp_Summary.PNG
+    """
     eq = list()
     eq.append("Eq(v_out,-R2/R1*v_in)")
     return solveEqs(eq, find, printEq=printEq, **kwargs)

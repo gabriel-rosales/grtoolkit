@@ -1,6 +1,6 @@
 import math
-from grtoolkit.Math import solveEqs
-from grtoolkit.Mechanics import magnitude
+from grtoolkit.Math import solveEqs, magnitude
+# from grtoolkit.M import magnitude
 
 ################################ RADIAL
 def v_rad(r,T):
@@ -117,7 +117,7 @@ def kineticEnergy(I, w):
         I = moment of inertia
         w = magnitude of angular velocity (w_z)
     """
-    K=.5*I*w**2
+    K = 0.5*I*w**2
     return K
 
 def torque(find, printEq=False, warning=True, **kwargs):
@@ -147,6 +147,3 @@ def angularMomentum(find, printEq=False, warning=True, **kwargs):
     eq.append("Eq(tau, I*a_z)")
     eq.append("Eq(W,tau*dtheta)")
     return solveEqs(eq, find, printEq=printEq, **kwargs)
-
-
-        

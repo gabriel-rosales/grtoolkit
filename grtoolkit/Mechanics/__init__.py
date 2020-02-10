@@ -8,13 +8,7 @@ import grtoolkit.Mechanics.Pulleys
 
 # EASY ACCESS
 import math, scipy.constants
-from grtoolkit.Math import algebraSolve, solveEqs
-
-def magnitude(*args):
-    square_sum = 0
-    for arg in args:
-        square_sum += arg**2
-    return math.sqrt(square_sum)
+from grtoolkit.Math import algebraSolve, solveEqs, magnitude
      
 def forceEq(find, printEq=False, **kwargs):
     """variables: 
@@ -135,11 +129,11 @@ def stress(f_normal,A):
 
 def shearStress(f_parallel,A):
     """variables:
-            sigma=stress
+            sigma_shear=shear stress (parallel)
             f=force
             a=area"""
-    sigma = f_parallel/A
-    return sigma
+    sigma_shear = f_parallel/A
+    return sigma_shear
     
 def strain(dl,l0):
     """variables:
@@ -157,6 +151,17 @@ def YoungsModulusEq(find="Y", printEq=False, **kwargs):
     """
     eq = list()
     eq.append("Eq(Y, sigma/epsilon)")
+    return solveEqs(eq, find, printEq=printEq, **kwargs)
+
+def shearModulus(find="S", printEq=False, **kwargs):
+    """variables: 
+            S = shear modulus
+            sigma_shear = shear stress
+            dx = along shear force (parallel to surface)
+            h = height of subject that is subject to shear forces
+    """
+    eq = list()
+    eq.append("Eq(S, sigma_shear/(dx/h))")
     return solveEqs(eq, find, printEq=printEq, **kwargs)
 
 if __name__ == "__main__":

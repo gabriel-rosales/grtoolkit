@@ -1,1 +1,2 @@
 include grtoolkit/PropertyTables.accdb
+include grtoolkit\Circuits\OpAmps\OpAmp_Summary.PNG

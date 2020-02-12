@@ -10,8 +10,14 @@ def invertingAmplifier(find="v_out", printEq=False, **kwargs):
     """variables: 
                 v_out, v_in = voltage out/in
                 R2, R1 = resistors (view reference image)
+    |image2|
 
     .. image:: OpAmp_Summary.PNG
+
+    .. |image2| image:: OpAmp_Summary.PNG
+
+    grtoolkit\Circuits\OpAmps\OpAmp_Summary.PNG
+
     """
     eq = list()
     eq.append("Eq(v_out,-R2/R1*v_in)")

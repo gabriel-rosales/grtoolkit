@@ -60,7 +60,8 @@ ARGUMENTS:
     viewPrint - print to console parent folder, subfolder, and files that search() is encountering
     rootInclude - include root search folder in the output folder search results
     depth - how many levels of folders should the program output, default is no limit
-    abs - output absolute or relative paths. Default is absolute path.'''
+    abs - output absolute or relative paths. Default is absolute path.
+    lastValue - true/false. return file name or absolute address'''
 
     files_recursive = list()
     folders_recursive = list()

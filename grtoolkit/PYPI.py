@@ -66,9 +66,14 @@ def Upload2Pypi():
 
         updateSetupVer()
 
-        cmd(f'cd {cwd}', 
-            'python setup.py sdist bdist_wheel',
-            'twine upload dist/*')
+        if "PYPI_USER" in os.environ and "PYPI_PASS" in os.environ:
+            cmd(f'cd {cwd}', 
+                'python setup.py sdist bdist_wheel',
+                f'twine upload dist/* -u {os.environ["PYPI_USER"]} -p {os.environ["PYPI_PASS"]}')
+        else:
+            cmd(f'cd {cwd}', 
+                'python setup.py sdist bdist_wheel',
+                f'twine upload dist/*')
     else:
         print(f"setup.py not found in {cwd}")
 

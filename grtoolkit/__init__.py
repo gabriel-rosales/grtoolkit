@@ -10,7 +10,9 @@ import grtoolkit.Mechanics
 import grtoolkit.MSAccess
 import grtoolkit.PDF
 import grtoolkit.Python
+import grtoolkit.Quotes
 import grtoolkit.Storage
+import grtoolkit.TTS
 import grtoolkit.Windows
 
 #### EASY ACCESSS FUNCTIONS

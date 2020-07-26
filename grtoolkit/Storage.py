@@ -2,6 +2,23 @@ import pickle, shutil, os, re
 from grtoolkit.Decorators import try_pass
 from grtoolkit.File import directoryLastValue
 
+# class Pickle:
+#     def __init__(self, fileName):
+#         self.fileName = fileName
+
+#     def save(self):
+#         outfile = open(filename, 'wb')
+#         pickle.dump(pickle_object, outfile)
+#         outfile.close()
+
+#     def load(self):
+#         infile = open(filename, 'rb')
+#         pickle_object = pickle.load(infile)
+#         infile.close
+#         return pickle_object
+
+    
+
 def savePickle(filename, pickle_object):
     outfile = open(filename, 'wb')
     pickle.dump(pickle_object, outfile)
@@ -18,30 +35,56 @@ def deleteDirectory(path):
     shutil.rmtree(path)
 
 class File:
-    def __init__(self, fileName):
+    def __init__(self, fileName, enc=0):
         self.fileName = fileName
+        self.enc_dict = {0:None, 1:"utf8", 2:"utf-16le"}
+        try:
+            self.encode = self.enc_options(enc)
+        except:
+            self.encode = enc
+
+    def enc_options(self, interger):
+        return self.enc_dict[interger]
 
     def write(self, content):
         """Overwrites to file - deletes what was there before
         If file did not exist it creates a file"""
 
-        f = open(self.fileName, "w")
+        if self.encode != None:
+            content = content.encode(self.encode)
+            f = open(self.fileName, "wb")
+        else:
+            f = open(self.fileName, "w")
         f.write(content)
         f.close()
 
     def append(self, content, newline=True):
         """Appends content to existing file"""
-
-        f = open(self.fileName, "a")
-        f.write("\n" + content) if newline else f.write(content)
+        nextLine = "\n"
+        if self.encode != None:
+            nextLine = nextLine.encode(self.encode)
+            content = content.encode(self.encode)
+            f = open(self.fileName, "ab")
+        else:
+            f = open(self.fileName, "a")
+        f.write(nextLine + content) if newline else f.write(content)
         f.close()
 
     def read(self):
         """Returns existing file content"""
 
-        f = open(self.fileName)
-        t = f.read()
-        f.close
+        f = None
+        t = None
+
+        if self.encode != None:
+            f = open(self.fileName, "rb")
+            t = f.read()
+            t = t.decode(self.encode)
+            f.close()
+        else:
+            f = open(self.fileName)
+            t = f.read()
+            f.close()
         return t
 
     def print(self):

@@ -71,4 +71,5 @@ TCPI = ToCompletePerformanceIndex
 ETC = EstimateToComplete
 VAC = VarianceAtCompletion
 
-print(EAC2(26000,EV=65000,AC=75000))
+if __name__ == "__main__":
+    print(EAC2(26000,EV=65000,AC=75000))

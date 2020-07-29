@@ -1,6 +1,5 @@
 import functools, time
 
-
 def try_pass(func):
     """Try/except/pass runtime of decorated function"""
 
@@ -77,3 +76,4 @@ class wait(object):
 
 if __name__ == "__main__":
     pass
+    

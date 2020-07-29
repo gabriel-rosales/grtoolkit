@@ -3,6 +3,7 @@ import grtoolkit.Decorators
 import grtoolkit.Economics
 import grtoolkit.File
 import grtoolkit.Format
+import grtoolkit.GUI
 import grtoolkit.Hardcode
 import grtoolkit.Heat
 import grtoolkit.Math

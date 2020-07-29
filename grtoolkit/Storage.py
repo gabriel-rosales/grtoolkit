@@ -1,34 +1,32 @@
-import pickle, shutil, os, re
+import pickle, shutil, os, re, json
 from grtoolkit.Decorators import try_pass
 from grtoolkit.File import directoryLastValue
 
-# class Pickle:
-#     def __init__(self, fileName):
-#         self.fileName = fileName
+class Pickle:
+    def __init__(self, fileName):
+        self.file = fileName
+        self.contents = None
 
-#     def save(self):
-#         outfile = open(filename, 'wb')
-#         pickle.dump(pickle_object, outfile)
-#         outfile.close()
+    def load(self):
+        with open(self.file, 'rb') as file:
+            self.contents = pickle.load(file)
+            return self.contents
 
-#     def load(self):
-#         infile = open(filename, 'rb')
-#         pickle_object = pickle.load(infile)
-#         infile.close
-#         return pickle_object
 
+    def save(self, pickle_object):
+        with open(self.file, 'wb') as file:
+            pickle.dump(pickle_object, file)
+
+# def savePickle(filename, pickle_object):
+#     outfile = open(filename, 'wb')
+#     pickle.dump(pickle_object, outfile)
+#     outfile.close()
     
-
-def savePickle(filename, pickle_object):
-    outfile = open(filename, 'wb')
-    pickle.dump(pickle_object, outfile)
-    outfile.close()
-    
-def loadPickle(filename):
-    infile = open(filename, 'rb')
-    pickle_object = pickle.load(infile)
-    infile.close
-    return pickle_object
+# def loadPickle(filename):
+#     infile = open(filename, 'rb')
+#     pickle_object = pickle.load(infile)
+#     infile.close
+#     return pickle_object
 
 @try_pass
 def deleteDirectory(path):
@@ -37,6 +35,7 @@ def deleteDirectory(path):
 class File:
     def __init__(self, fileName, enc=0):
         self.fileName = fileName
+        self.counter = 0
         self.enc_dict = {0:None, 1:"utf8", 2:"utf-16le"}
         try:
             self.encode = self.enc_options(enc)
@@ -49,6 +48,17 @@ class File:
     def write(self, content):
         """Overwrites to file - deletes what was there before
         If file did not exist it creates a file"""
+
+        # MODES
+        #     'r' - Read (default).
+        #     'w' - Write (truncate).
+        #     'x' - Write or fail if the file already exists.
+        #     'a' - Append.
+        #     'w+' - Read and write (truncate).
+        #     'r+' - Read and write from the start.
+        #     'a+' - Read and write from the end.
+        #     't' - Text mode (default).
+        #     'b' - Binary mode.
 
         if self.encode != None:
             content = content.encode(self.encode)
@@ -69,6 +79,15 @@ class File:
             f = open(self.fileName, "a")
         f.write(nextLine + content) if newline else f.write(content)
         f.close()
+
+    def write_and_append(self,content,newline=True):
+        if self.counter == 0:
+            self.write(content)
+            self.counter+=1
+        else:
+            self.append(content, newline)
+            self.counter+=1
+
 
     def read(self):
         """Returns existing file content"""
@@ -150,3 +169,17 @@ def regexList(unfilteredList, regex):
         if filtering:
             filteredList.append(item)
     return filteredList
+
+class JSON():
+    def __init__(self,fileName):
+        self.file = fileName
+        self.contents = None
+
+    def read(self):
+        with open(self.file, encoding='utf-8') as jfile:
+            self.contents = json.load(jfile)
+        return self.contents
+
+    def write(self, jsonObject):
+        with open(self.file, 'w', encoding='utf-8') as file:
+            json.dump(jsonObject, file, ensure_ascii=False, indent=2)

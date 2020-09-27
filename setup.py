@@ -39,5 +39,5 @@ setuptools.setup(
     ],
     scripts=[f'cmdline\\{file}' for file in filesInFolder('cmdline/',"*")],
     include_package_data=True, #To use MANIFEST.in to include non-code files
-    install_requires=['PyPDF2', 'requests', 'twine', 'wheel', 'pipenv']
+    install_requires=['PyPDF2', 'requests', 'twine', 'wheel', 'pipenv', 'sympy', 'pyautogui', 'numpy', 'pandas', 'matplotlib', 'bs4']
 )

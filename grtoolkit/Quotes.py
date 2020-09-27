@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup, NavigableString
-from grtoolkit.Storage import loadPickle, savePickle
+# from grtoolkit.Storage import loadPickle, savePickle
+from grtoolkit.Storage import Pickle
 
 def goodreads_scraper(author, page_num=None):
     ### SOURCE: https://soniajoseph.github.io/goodreads-scraper/
@@ -107,13 +108,18 @@ def generateDB(author, page_num=None, saveFile=None):
 	db = goodreads_scraper(author, page_num)
 	if saveFile != None:
 		try:
-			savePickle(saveFile,db)
+			p = Pickle(saveFile)
+			p.save(db)
+			# savePickle(saveFile,db)
 		except:
 			print("Error saving pickle...")
 	return db
 
 def loadDB(pickleFile):
-	return loadPickle(pickleFile)
+	p = Pickle(pickleFile)
+	p.load()
+	# return loadPickle(pickleFile)
+	return p.contents
 
 def bookTitles(db):
 	titles = []

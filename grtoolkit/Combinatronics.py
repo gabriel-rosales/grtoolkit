@@ -21,3 +21,25 @@
 # [('a', 'b'), ('a', 'c'),
 #  ('b', 'a'), ('b', 'c'),
 #  ('c', 'a'), ('c', 'b')]
+
+from grtoolkit.Storage import File
+from grtoolkit.Decorators import timer
+import itertools
+
+@timer
+def generateAllStringCombinations(comboLength, chars='default', fileName=None):
+    if chars == 'default':
+        chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@£$%^&*().,?0123456789'
+    ci = iter(itertools.product(chars,repeat=comboLength))
+    # combinations = []
+    sFile = File(fileName)
+    
+    while True:
+        try:
+            # combinations.append(''.join(next(ci)))
+            sFile.write_and_append(''.join(next(ci)) + ',')
+        except StopIteration:
+            break
+
+if __name__ == "__main__":
+    print(len('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_0123456789'))

@@ -1,23 +1,28 @@
 import math, numpy as np
-from sympy import *
+# from sympy import *
+from sympy import sympify, solve, solve_poly_system
 
 def magnitude(*args):
+    '''Square root of sum'''
     square_sum = 0
     for arg in args:
         square_sum += arg**2
     return math.sqrt(square_sum)
 
 def roundSig(x, sig=5):
+    '''Round numbers to specified significant figures'''
     if x == 0:
         return 0
     return round(x, sig - int(math.floor(math.log10(abs(x)))) - 1)
 
 def delta(p1,p2):
-
+    '''Returns absolute difference between two numbers'''
     return abs(p2-p1)
 
 def softmax(L):
-    '''Function that takes as input a list of numbers, and returns the list of values given by the softmax function.
+    '''
+    Function that takes as input a list of numbers, 
+    and returns the list of values given by the softmax function.
     
     Example:
     Input [1,2,3]
@@ -30,7 +35,8 @@ def sigmoid(x):
     return 1/(1+np.exp(-x))
 
 def cross_entropy(Y, P):
-    '''Sample inputs: Y=[1,1,0] and P=[0.8,0.7,0.1] Equal 0.69
+    '''
+    Sample inputs: Y=[1,1,0] and P=[0.8,0.7,0.1] Equal 0.69
     Where,
     Y is list of whether events are on or off
     P is list of probabilities if events are on
@@ -51,8 +57,12 @@ def cross_entropy(Y, P):
     return -np.sum(Y * np.log(P) + (1 - Y) * np.log(1 - P))
 
 def algebraSolve(expr, solve_for,**kwargs):
-    """Solves algebraic string equation. 
-    format: algebraSolve("x**2 + 3*x - 1/2 + y", "x", y=24)
+    """
+    Solves single algebraic string equation. 
+    
+    Usage: algebraSolve("x**2 + 3*x - 1/2 + y", "x", y=24)
+
+    Returns: [ans]
     **"""
     expr=sympify(expr)
     #GENERATE VARIABLE SYMBOLS FROM EXPRESSION
@@ -69,6 +79,25 @@ def algebraSolve(expr, solve_for,**kwargs):
     return solve(expr, solve_for)
 
 def solveEqs(eq, find, printEq=False, **kwargs):
+    """
+    Solves multiple equations independently in search for variable.
+    Allows substitution via kwargs.
+    In other words, algebraSolve() on multiple equations at once.
+
+    Usage:
+        eq = list()
+        eq.append("Eq(a_tan, dv/dt)")
+        eq.append("Eq(a_tan, r*dw/dt)")
+        eq.append("Eq(a_tan, r*alpha)")
+        solveEqs(eq, "a_tan", printEq=printEq, **kwargs)
+
+    Returns:
+        [
+            ans1,
+            ans2,
+            ans3
+        ]
+    """
     #CREATE SET OF ARGUMENTS SUPPLIED TO FUNCTION
     availSet = {find}
     for k in kwargs.keys():
@@ -108,13 +137,11 @@ def printEquationsSolution(eq, solution, printEq=True):
 
 def solveEqSimultaneously():
     # Sympy Review https://docs.sympy.org/latest/modules/solvers/solvers.html
-# Solve the following system:
 
-#    x + 4 y ==  2
-# -2 x +   y == 14
-
-# system = Matrix(( (1, 4, 2), (-2, 1, 14)))
-
-# solve_linear_system(system, x, y)
-# {x: -6, y: 2}
+    ###ACTUALLY WORKS, COMPLETE PROGRAMMING FOR REGULAR USE
+    # from sympy import solve_poly_system
+    from sympy.abc import x, y
+    solve_poly_system([-x/10-x/5-6-(x-y)/2,
+                        y/4-3-6-(x-y)/2], 
+                        x, y)
     pass

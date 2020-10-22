@@ -137,55 +137,21 @@ def printEquationsSolution(eq, solution, printEq=True):
 
 def solveSimultaneousEqs(eq):
     '''
+    Solve Simultaneous Equations
+    Finite solutions only. No expression based answers.
+
     Usage:
     eq = list()
-    eq.append("Eq(a_tan, dv/dt)")
-    eq.append("Eq(a_tan, r*dw/dt)")
-    eq.append("Eq(a_tan, r*alpha)")
-    solveSimultaneousEqs(eq, "a_tan", printEq=printEq, **kwargs)
+    eq.append("-x/10-x/5-6-(x-y)/2")
+    eq.append("y/4-3-6-(x-y)/2")
+    solveSimultaneousEqs(eq)
     '''
-    # Sympy Review https://docs.sympy.org/latest/modules/solvers/solvers.html
-
-    ###ACTUALLY WORKS, COMPLETE PROGRAMMING FOR REGULAR USE
-    # from sympy import solve_poly_system
-    # from sympy.abc import x, y
-    # exec(f"{sym.name}=symbols('{sym.name}')")
-
-
-    # availSet = {find}
-    # for k in kwargs.keys():
-        # availSet.add(k)
-
-    # eq = [sympify(expr) for expr in eq]
-    # freesym = [expr.free_symbols for expr in eq]
-    # freevar = []
-    # solution = list()
-    # #CONVERT LIST OF SETS OF SYMBOLS INTO LIST OF SETS OF STR
-    # for freeset in freesym:
-    #     tempset = set()
-    #     for sym in freeset:
-    #         tempset.add(sym.name)
-    #     freevar.append(tempset)
-    # unknowns = [freeset-availSet for freeset in freevar]            # Eliminate variables requested in function arguments: find and knowns
-    # unknowns_count = [len(unknownset) for unknownset in unknowns]   # How many unknowns are left in each equation?
-    # find_avail = [find in freevarset for freevarset in freevar]     # Is the variable in question available in this equation?
-    # index = list(range(len(unknowns_count)))
-    # zipper = list(zip(index, unknowns_count, find_avail))
-
-    # for zippedList in zipper:
-    #     solution.append(solve_poly_system(eq[zippedList[0]],*args))
-
-
-    # x=symbols("x")
-    # y=symbols("y")
-
-    # eq = [
-    #         -x/10-x/5-6-(x-y)/2,
-    #         y/4-3-6-(x-y)/2
-    #     ]
-
 
     eq = [sympify(expr) for expr in eq]
+    # for k,v in subsDict.items():
+    #     # exec(f"{k}=symbols('{sym.name}')")
+    #     eq.append()
+
     freesym = [expr.free_symbols for expr in eq]
     freevar = list()
     for freeset in freesym:
@@ -195,22 +161,14 @@ def solveSimultaneousEqs(eq):
     for sym in freevar:
         exec(f"{sym.name}=symbols('{sym.name}')")
 
-
-    #     tempset = set()
-    #     for sym in freeset:
-    #         tempset.add(sym.name)
-    #     freevar.append(tempset)
-    # unknowns = list([freeset for freeset in freevar] )
-
-    print(solve_poly_system(eq, freevar))
-    # pass
+    solutions = solve_poly_system(eq, freevar)
+    solutionList = list()
+    for possibility in solutions:
+        solutionList.append(dict(zip(freevar,possibility)))
+        return solutionList
 
 if __name__ == "__main__":
-    # eq = [
-    #     -x/10-x/5-6-(x-y)/2,
-    #     y/4-3-6-(x-y)/2
-    # ]
     eq = list()
-    eq.append("-x/10-x/5-6-(x-y)/2")
-    eq.append("y/4-3-6-(x-y)/2")
-    solveSimultaneousEqs(eq)
+    eq.append("Eq(-v1/10-v1/5-6-(v1-v2)/2,0)")
+    eq.append("v2/4-3-6-(v1-v2)/2")
+    print(solveSimultaneousEqs(eq))

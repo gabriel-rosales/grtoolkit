@@ -3,7 +3,11 @@ import grtoolkit.Circuits.Filters
 import grtoolkit.Circuits.OpAmps
 import grtoolkit.Circuits.Transistors
 
-from grtoolkit.Math import solveEqs
+from grtoolkit.Math import solveEqs, solveSimultaneousEqs
+
+## NOTE
+# SERIES: Current constant, voltage divides
+# PARALLEL: Voltage constant, current divides
 
 def BasicLaws(find, printEq=False, **kwargs):
     """variables: 
@@ -48,12 +52,35 @@ def Capacitance(find="C", printEq=False, **kwargs):
     eq.append("Eq(C,epsilon*A/d)")    
     return solveEqs(eq, find, printEq=printEq, **kwargs)
 
-def KCL(i_list):
-    """Sum of currents entering a node equal the sum of currents leaving a node"""
-    return sum(i_list)
+def KCL(eq):
+    """
+    Conservation of current.
+    Sum of currents entering a node equal the sum of currents leaving a node
+    
+    Theory:
+        => Assume current directions & choose reference node (ground)
+        => For each relevant node, obtain node equation
+        => i1+ i2 = i3 + i4
+        => For each current if necessary replace with (vh-vl)/R in direction of travel
+        => Solve simultaneous equation for missing values.
+
+    Usage:
+        eq = list()
+        eq.append("Eq(-v1/10-v1/5-6-(v1-v2)/2,0)") # Node 1 Equation
+        eq.append("v2/4-3-6-(v1-v2)/2")            # Node 2 Equation
+        solveSimultaneousEqs(eq)
+
+    Output:
+        [{v2: 12, v1: 0}]
+    """
+    return solveSimultaneousEqs(eq)
 
 def KVL(v_list):
-    """Sum of all voltages around a closed path (or loop) is 0"""
+    """
+    Conservation of Voltage
+    Sum of all voltages around a closed path (or loop) is 0
+    """
+    # TO BE COMPLETED
     return sum(v_list)
 
 def ResistorsInSeries(r_list):
@@ -65,7 +92,10 @@ def ResistorsInParellel(r_list):
     return 1/sumOfInverse
 
 def voltageDivision(v_in, r_list_ordered, showWork=False):
-    """voltage is divided among the resistors in direct proportion to their resistances; the larger the resistance, the larger the voltage drop."""
+    """
+    Voltage is divided among the resistors in direct proportion to their resistances; 
+    the larger the resistance, the larger the voltage drop.
+    """
     r_total = sum(r_list_ordered)
     voltages = [r/r_total*v_in for r in r_list_ordered]
     if showWork:
@@ -92,15 +122,15 @@ def ConductanceInParellel(g_list):
     return ResistorsInSeries(g_list)
 
 def delta2wye(Ra, Rb, Rc):
-"""
-''------RA-------''''R2'''''''''R3''''
-'''dd''''''''dd'''''''' y'''''y'''''''
-'''''RC''''RB''''''''''''''y''''''''''
-'''''''d''d''''''''''''''''y''''''''''
-''''''''dd'''''''''''''''''R1'''''''''
+    """
+    ''------RA-------''''R2'''''''''R3''''
+    '''dd''''''''dd'''''''' y'''''y'''''''
+    '''''RC''''RB''''''''''''''y''''''''''
+    '''''''d''d''''''''''''''''y''''''''''
+    ''''''''dd'''''''''''''''''R1'''''''''
 
-Returns R1, R2, R3
-"""
+    Returns R1, R2, R3
+    """
     Rt = Ra+Rb+Rc
     R1 = Rb*Rc/Rt
     R2 = Rc*Ra/Rt
@@ -108,15 +138,15 @@ Returns R1, R2, R3
     return R1, R2, R3
 
 def wye2delta(R1, R2, R3):
-"""
-''------RA-------''''R2'''''''''R3''''
-'''dd''''''''dd'''''''' y'''''y'''''''
-'''''RC''''RB''''''''''''''y''''''''''
-'''''''d''d''''''''''''''''y''''''''''
-''''''''dd'''''''''''''''''R1'''''''''
+    """
+    ''------RA-------''''R2'''''''''R3''''
+    '''dd''''''''dd'''''''' y'''''y'''''''
+    '''''RC''''RB''''''''''''''y''''''''''
+    '''''''d''d''''''''''''''''y''''''''''
+    ''''''''dd'''''''''''''''''R1'''''''''
 
-Returns Ra, Rb, Rc
-"""
+    Returns Ra, Rb, Rc
+    """
     Rx = R1*R2 + R2*R3 + R3*R1
     Ra = Rx/R1
     Rb = Rx/R2
@@ -147,8 +177,7 @@ def supernode():
 
 def meshAnalysis():
     # Revisit when simultaneous eq in grtoolkit.math complete
-    print("""
-        Sum of all voltages in a node""")
+    print("""Sum of all voltages in a node""")
 
 def sourceTransformation():
     # TO BE REVIEWED
@@ -161,3 +190,21 @@ def TheveninNorton():
 def maximumPowerTransfer():
     # TO BE REVIEWED
     pass
+
+if __name__ == "__main__":
+    # eq = list()
+    # eq.append("(v1-24)/250+(v1/50)+(v1-60*ib)/150")
+    # eq.append("Eq(ib,(24-v1)/250)")
+    # print(KCL(eq))
+    # [{ib: 48/605, v1: 504/121}]
+
+    eq = list()
+    eq.append("""
+        (24-v1)/250 
+        + (60*ib)/150
+        - v1/50
+    """)
+    eq.append("Eq(ib,(24-v1)/250)")
+
+    # eq.append("Eq(ib,(24-v1)/250)")
+    print(KCL(eq))

@@ -2,7 +2,6 @@ import grtoolkit.Circuits.AC
 import grtoolkit.Circuits.Filters
 import grtoolkit.Circuits.OpAmps
 import grtoolkit.Circuits.Transistors
-
 from grtoolkit.Math import solveEqs, solveSimultaneousEqs
 
 ## NOTE
@@ -79,9 +78,25 @@ def KVL(v_list):
     """
     Conservation of Voltage
     Sum of all voltages around a closed path (or loop) is 0
+
+    Theory:
+    => Assume current directions & choose reference node (ground)
+    => For each mesh, obtain mesh equation
+    => -v1 + v2 + v3 + v4 = 0
+    => For each voltage, if necessary, replace with i*R in direction of travel
+    => Solve simultaneous equation for missing values.
+
+    Usage:
+        eq = list()
+        eq.append("Eq(-15 + 5*i1 + 10*(i1-i2) + 10, 0)")  # Mesh 1 Equation
+        eq.append("6*i2 + 4*i2 + 10*(i2-i1) - 10")        # Mesh 2 Equation
+        solveSimultaneousEqs(eq)
+
+    Output:
+        [{i2: 1, i1: 1}]
     """
     # TO BE COMPLETED
-    return sum(v_list)
+    return solveSimultaneousEqs(eq)
 
 def ResistorsInSeries(r_list):
     """Resistors connected in series is the sum of the individual resistances"""
@@ -199,12 +214,9 @@ if __name__ == "__main__":
     # [{ib: 48/605, v1: 504/121}]
 
     eq = list()
-    eq.append("""
-        (24-v1)/250 
-        + (60*ib)/150
-        - v1/50
-    """)
-    eq.append("Eq(ib,(24-v1)/250)")
+    eq.append("Eq(-15+5*i1+10*(i1-i2)+10,0)")  # Mesh 1 Equation
+    eq.append("6*i2+4*i2+10*(i2-i1)-10")       # Mesh 2 Equation
+    solveSimultaneousEqs(eq)
 
     # eq.append("Eq(ib,(24-v1)/250)")
     print(KCL(eq))

@@ -1,6 +1,6 @@
 import math, numpy as np
 # from sympy import *
-from sympy import sympify, solve, solve_poly_system
+from sympy import sympify, solve, solve_poly_system, symbols
 
 def magnitude(*args):
     '''Square root of sum'''
@@ -135,13 +135,82 @@ def printEquationsSolution(eq, solution, printEq=True):
     print("Equations"), printEquations(eq), print("\n")
     print("Solutions"), printEquations(solution), print("\n")
 
-def solveEqSimultaneously():
+def solveSimultaneousEqs(eq):
+    '''
+    Usage:
+    eq = list()
+    eq.append("Eq(a_tan, dv/dt)")
+    eq.append("Eq(a_tan, r*dw/dt)")
+    eq.append("Eq(a_tan, r*alpha)")
+    solveSimultaneousEqs(eq, "a_tan", printEq=printEq, **kwargs)
+    '''
     # Sympy Review https://docs.sympy.org/latest/modules/solvers/solvers.html
 
     ###ACTUALLY WORKS, COMPLETE PROGRAMMING FOR REGULAR USE
     # from sympy import solve_poly_system
-    from sympy.abc import x, y
-    solve_poly_system([-x/10-x/5-6-(x-y)/2,
-                        y/4-3-6-(x-y)/2], 
-                        x, y)
-    pass
+    # from sympy.abc import x, y
+    # exec(f"{sym.name}=symbols('{sym.name}')")
+
+
+    # availSet = {find}
+    # for k in kwargs.keys():
+        # availSet.add(k)
+
+    # eq = [sympify(expr) for expr in eq]
+    # freesym = [expr.free_symbols for expr in eq]
+    # freevar = []
+    # solution = list()
+    # #CONVERT LIST OF SETS OF SYMBOLS INTO LIST OF SETS OF STR
+    # for freeset in freesym:
+    #     tempset = set()
+    #     for sym in freeset:
+    #         tempset.add(sym.name)
+    #     freevar.append(tempset)
+    # unknowns = [freeset-availSet for freeset in freevar]            # Eliminate variables requested in function arguments: find and knowns
+    # unknowns_count = [len(unknownset) for unknownset in unknowns]   # How many unknowns are left in each equation?
+    # find_avail = [find in freevarset for freevarset in freevar]     # Is the variable in question available in this equation?
+    # index = list(range(len(unknowns_count)))
+    # zipper = list(zip(index, unknowns_count, find_avail))
+
+    # for zippedList in zipper:
+    #     solution.append(solve_poly_system(eq[zippedList[0]],*args))
+
+
+    # x=symbols("x")
+    # y=symbols("y")
+
+    # eq = [
+    #         -x/10-x/5-6-(x-y)/2,
+    #         y/4-3-6-(x-y)/2
+    #     ]
+
+
+    eq = [sympify(expr) for expr in eq]
+    freesym = [expr.free_symbols for expr in eq]
+    freevar = list()
+    for freeset in freesym:
+        for sym in freeset:
+            freevar.append(sym)
+    freevar=list(set(freevar))
+    for sym in freevar:
+        exec(f"{sym.name}=symbols('{sym.name}')")
+
+
+    #     tempset = set()
+    #     for sym in freeset:
+    #         tempset.add(sym.name)
+    #     freevar.append(tempset)
+    # unknowns = list([freeset for freeset in freevar] )
+
+    print(solve_poly_system(eq, freevar))
+    # pass
+
+if __name__ == "__main__":
+    # eq = [
+    #     -x/10-x/5-6-(x-y)/2,
+    #     y/4-3-6-(x-y)/2
+    # ]
+    eq = list()
+    eq.append("-x/10-x/5-6-(x-y)/2")
+    eq.append("y/4-3-6-(x-y)/2")
+    solveSimultaneousEqs(eq)

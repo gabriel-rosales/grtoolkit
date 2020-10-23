@@ -1,6 +1,7 @@
 import grtoolkit.Circuits.AC
 import grtoolkit.Circuits.Filters
 import grtoolkit.Circuits.OpAmps
+import grtoolkit.Circuits.Transformations
 import grtoolkit.Circuits.Transistors
 from grtoolkit.Math import solveEqs, solveSimultaneousEqs
 
@@ -102,7 +103,7 @@ def ResistorsInSeries(r_list):
     """Resistors connected in series is the sum of the individual resistances"""
     return sum(r_list)
 
-def ResistorsInParellel(r_list):
+def ResistorsInParallel(r_list):
     sumOfInverse = sum([1/r for r in r_list])
     return 1/sumOfInverse
 
@@ -128,45 +129,15 @@ def currentDivision(i_in, r_branch_list_ordered, showWork=False):
     return currents
 
 def Conductance(r):
+    # Look at functions as objects
+    # https://medium.com/python-pandemonium/function-as-objects-in-python-d5215e6d1b0d
     return 1/r
 
 def ConductanceInSeries(g_list):
-    return ResistorsInParellel(g_list)
+    return ResistorsInParallel(g_list)
 
-def ConductanceInParellel(g_list):
+def ConductanceInParallel(g_list):
     return ResistorsInSeries(g_list)
-
-def delta2wye(Ra, Rb, Rc):
-    """
-    ''------RA-------''''R2'''''''''R3''''
-    '''dd''''''''dd'''''''' y'''''y'''''''
-    '''''RC''''RB''''''''''''''y''''''''''
-    '''''''d''d''''''''''''''''y''''''''''
-    ''''''''dd'''''''''''''''''R1'''''''''
-
-    Returns R1, R2, R3
-    """
-    Rt = Ra+Rb+Rc
-    R1 = Rb*Rc/Rt
-    R2 = Rc*Ra/Rt
-    R3 = Ra*Rb/Rt
-    return R1, R2, R3
-
-def wye2delta(R1, R2, R3):
-    """
-    ''------RA-------''''R2'''''''''R3''''
-    '''dd''''''''dd'''''''' y'''''y'''''''
-    '''''RC''''RB''''''''''''''y''''''''''
-    '''''''d''d''''''''''''''''y''''''''''
-    ''''''''dd'''''''''''''''''R1'''''''''
-
-    Returns Ra, Rb, Rc
-    """
-    Rx = R1*R2 + R2*R3 + R3*R1
-    Ra = Rx/R1
-    Rb = Rx/R2
-    Rc = Rx/R3
-    return Ra, Rb, Rc
 
 def NodalSimpleAnalysis(vh, vl, r):
     """Current flows from a higher potential to a lower potential in a resistor"""
@@ -188,23 +159,48 @@ def supernode():
     print("""
         A supernode is formed by enclosing a (dependent or independent)
         voltage source connected between two nonreference nodes and any
-        elements connected in parallel with it.""")
+        elements connected in parallel with it.
+        
+        Short circuit the two nodes.""")
 
-def meshAnalysis():
-    # Revisit when simultaneous eq in grtoolkit.math complete
-    print("""Sum of all voltages in a node""")
+def supermesh():
+    print("""
+        A supermesh results when two meshes have a (dependent or independent)
+        current source in common.
+        
+        Short circuit the two meshes.""")
 
-def sourceTransformation():
-    # TO BE REVIEWED
+def superposition():
+    """
+    Alternative to nodal analysis if circuit has two or more independent sources.
+    Determine the contribution of each independent source and add them up.
+    The idea of superposition rests on the linearity property. 
+    As the input increases linearly so does the output.
+    
+    The voltage across (or current through) an element in a linear circuit is the 
+    algebraic sum of the voltages across (or current through) that element due to 
+    each independent source acting alone.
+    
+    Theory:
+        1. Turn off all independent sources expect one source.
+        Find the output (voltage or current) due to that active source using KVL & KCL
+
+        2. Repeat for each independent source.
+
+        3. Find the total contribution by adding algebraically all the contributions due to the independent sources.
+    """
     pass
 
-def TheveninNorton():
-    # TO BE REVIEWED
-    pass
-
-def maximumPowerTransfer():
-    # TO BE REVIEWED
-    pass
+def maximumPowerTransfer(Rth, Rl, Vth=False):
+    """
+    Maximum power is delivered to a system when the load resistance (Rl) equals the Thevenin resistance (Rth).
+    """
+    if Rth == Rl:
+        pmax = Vth**2 / 4 * Rth
+        return pmax
+    else:
+        p = (Vth / (Rth + Rl))**2 * Rl
+        return p
 
 if __name__ == "__main__":
     # eq = list()
@@ -218,5 +214,4 @@ if __name__ == "__main__":
     eq.append("6*i2+4*i2+10*(i2-i1)-10")       # Mesh 2 Equation
     solveSimultaneousEqs(eq)
 
-    # eq.append("Eq(ib,(24-v1)/250)")
     print(KCL(eq))

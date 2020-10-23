@@ -69,12 +69,15 @@ def Upload2Pypi():
         if "PYPI_USER" in os.environ and "PYPI_PASS" in os.environ:
             cmd(f'cd {cwd}', 
                 'python setup.py sdist bdist_wheel',
-                f'twine upload dist/* -u {os.environ["PYPI_USER"]} -p {os.environ["PYPI_PASS"]}')
+                # f'twine upload dist/* -u {os.environ["PYPI_USER"]} -p {os.environ["PYPI_PASS"]}')
+                f'{os.environ["twine"]} upload dist/* -u {os.environ["PYPI_USER"]} -p {os.environ["PYPI_PASS"]}')
+
         else:
             print("RECOMMENDED: Setup PYPI_USER and PYPI_PASS environment variables.")
             cmd(f'cd {cwd}', 
                 'python setup.py sdist bdist_wheel',
-                f'twine upload dist/*')
+                # f'twine upload dist/*')
+                f'{os.environ["twine"]} upload dist/*')
     else:
         print(f"setup.py not found in {cwd}")
 

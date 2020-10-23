@@ -1,6 +1,10 @@
 import grtoolkit.Circuits.AC
+import grtoolkit.Circuits.Capacitors as Capacitors
+import grtoolkit.Circuits.Conductance as Conductance
 import grtoolkit.Circuits.Filters
+import grtoolkit.Circuits.Inductors as Inductors
 import grtoolkit.Circuits.OpAmps
+import grtoolkit.Circuits.Resistors as Resistors
 import grtoolkit.Circuits.Transformations
 import grtoolkit.Circuits.Transistors
 from grtoolkit.Math import solveEqs, solveSimultaneousEqs
@@ -28,30 +32,6 @@ def BasicLaws(find, printEq=False, **kwargs):
     eq.append("Eq(i,(v_higher-v_lower)/R)")
     return solveEqs(eq, find, printEq=printEq, **kwargs)
 
-def Resistance(find, printEq=False, **kwargs):
-    """variables: 
-                R=resistance
-                p=density
-                l=length
-                A=cross sectional area"""
-    eq = list()
-    eq.append("Eq(R,p*l/A)")    
-    return solveEqs(eq, find, printEq=printEq, **kwargs)
-
-def Capacitance(find="C", printEq=False, **kwargs):
-    """
-    Usage: the ratio of the charge on one plate of a capacitor to the voltage difference between the two plates, measured in farads (F).
-
-
-    variables: 
-                C = capacitance
-                epsilon = permitivity of the dielectric material between plates
-                A = surface area of each plate
-                d = distance between plates"""
-    eq = list()
-    eq.append("Eq(C,epsilon*A/d)")    
-    return solveEqs(eq, find, printEq=printEq, **kwargs)
-
 def KCL(eq):
     """
     Conservation of current.
@@ -75,7 +55,7 @@ def KCL(eq):
     """
     return solveSimultaneousEqs(eq)
 
-def KVL(v_list):
+def KVL(eq):
     """
     Conservation of Voltage
     Sum of all voltages around a closed path (or loop) is 0
@@ -99,14 +79,6 @@ def KVL(v_list):
     # TO BE COMPLETED
     return solveSimultaneousEqs(eq)
 
-def ResistorsInSeries(r_list):
-    """Resistors connected in series is the sum of the individual resistances"""
-    return sum(r_list)
-
-def ResistorsInParallel(r_list):
-    sumOfInverse = sum([1/r for r in r_list])
-    return 1/sumOfInverse
-
 def voltageDivision(v_in, r_list_ordered, showWork=False):
     """
     Voltage is divided among the resistors in direct proportion to their resistances; 
@@ -127,17 +99,6 @@ def currentDivision(i_in, r_branch_list_ordered, showWork=False):
         print("Branch ordered current division: ", currents) 
         print("Adjust directions as necessary after getting result.")
     return currents
-
-def Conductance(r):
-    # Look at functions as objects
-    # https://medium.com/python-pandemonium/function-as-objects-in-python-d5215e6d1b0d
-    return 1/r
-
-def ConductanceInSeries(g_list):
-    return ResistorsInParallel(g_list)
-
-def ConductanceInParallel(g_list):
-    return ResistorsInSeries(g_list)
 
 def NodalSimpleAnalysis(vh, vl, r):
     """Current flows from a higher potential to a lower potential in a resistor"""
@@ -191,7 +152,7 @@ def superposition():
     """
     pass
 
-def maximumPowerTransfer(Rth, Rl, Vth=False):
+def maximumPowerTransfer(Rth, Rl, Vth):
     """
     Maximum power is delivered to a system when the load resistance (Rl) equals the Thevenin resistance (Rth).
     """
@@ -209,9 +170,11 @@ if __name__ == "__main__":
     # print(KCL(eq))
     # [{ib: 48/605, v1: 504/121}]
 
-    eq = list()
-    eq.append("Eq(-15+5*i1+10*(i1-i2)+10,0)")  # Mesh 1 Equation
-    eq.append("6*i2+4*i2+10*(i2-i1)-10")       # Mesh 2 Equation
-    solveSimultaneousEqs(eq)
+    # eq = list()
+    # eq.append("Eq(-15+5*i1+10*(i1-i2)+10,0)")  # Mesh 1 Equation
+    # eq.append("6*i2+4*i2+10*(i2-i1)-10")       # Mesh 2 Equation
+    # solveSimultaneousEqs(eq)
 
-    print(KCL(eq))
+    # print(KCL(eq))
+
+    pass

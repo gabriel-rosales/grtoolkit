@@ -24,7 +24,7 @@ def filesInFolder(folder, fileType):  # Returns list of files of specified file 
 
 setuptools.setup(
     name="grtoolkit",
-    version="20.10.0",
+    version="20.10.5",
     author="Gabriel Rosales",
     author_email="gabriel.alejandro.rosales@gmail.com",
     description="Common functions for quick python development",

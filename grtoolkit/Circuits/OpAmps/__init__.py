@@ -7,17 +7,9 @@ def referenceMaterial():
     pass
 
 def invertingAmplifier(find="v_out", printEq=False, **kwargs):
-    """variables: 
+    """variables
                 v_out, v_in = voltage out/in
                 R2, R1 = resistors (view reference image)
-    |image2|
-
-    .. image:: OpAmp_Summary.PNG
-
-    .. |image2| image:: OpAmp_Summary.PNG
-
-    grtoolkit\Circuits\OpAmps\OpAmp_Summary.PNG
-
     """
     eq = list()
     eq.append("Eq(v_out,-R2/R1*v_in)")
@@ -57,3 +49,19 @@ def differenceAmplifier(find="v_out", printEq=False, **kwargs):
     eq = list()
     eq.append("Eq(v_out,R2/R1*(v2-v1)")
     return solveEqs(eq, find, printEq=printEq, **kwargs)
+
+def DAC(Rf,R_list, V_list):
+    """
+    TO BE COMPLETED; this can use the summer function. It's the same thing.
+    """
+    eq = list()
+    eq.append("Eq(-v_out,rf/r1*v1 + rf/r2*v2 + rf/r3*v3 + rf/r4*v4")
+    # return solveEqs(eq, find, printEq=printEq, **kwargs)
+
+def gainAmplifier():
+    """
+    TO BE COMPLETED
+    """
+    eq = list()
+    eq.append("Eq(vo,Av*(v2-v1)")
+    eq.append("Eq(Av = 1 + 2*R / R_G")

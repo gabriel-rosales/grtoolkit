@@ -122,10 +122,12 @@ def DAC(Rf,R_list, V_list):
     eq.append("Eq(-v_o,rf/r1*v1 + rf/r2*v2 + rf/r3*v3 + rf/r4*v4")
     # return solveEqs(eq, find, printEq=printEq, **kwargs)
 
-def gainAmplifier():
+def instrumentationAmplifier():
     """
+    For precision measurement and process control
+    Applications include: isolation amplifiers, thermocouple amplifiers, and data acquisition systems.
     TO BE COMPLETED
     """
     eq = list()
-    eq.append("Eq(vo,Av*(v2-v1)")
-    eq.append("Eq(Av = 1 + 2*R / R_G")
+    eq.append("Eq(vo,A_v*(v2-v1)")
+    eq.append("Eq(Av, 1 + 2*R / R_G")

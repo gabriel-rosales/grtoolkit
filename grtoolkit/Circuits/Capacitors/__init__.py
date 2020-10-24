@@ -1,11 +1,12 @@
 from grtoolkit.Math import solveEqs
 
+# Capacitors do not dissipate, but store or release energy
+
 def Capacitance(find="C", printEq=False, **kwargs):
     """
     Usage: the ratio of the charge on one plate of a capacitor to the voltage difference between the two plates, measured in farads (F).
 
-
-    variables: 
+    Variables: 
                 C = capacitance
                 epsilon = permitivity of the dielectric material between plates
                 A = surface area of each plate

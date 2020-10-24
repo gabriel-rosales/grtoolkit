@@ -79,27 +79,6 @@ def KVL(eq):
     # TO BE COMPLETED
     return solveSimultaneousEqs(eq)
 
-def voltageDivision(v_in, r_list_ordered, showWork=False):
-    """
-    Voltage is divided among the resistors in direct proportion to their resistances; 
-    the larger the resistance, the larger the voltage drop.
-    """
-    r_total = sum(r_list_ordered)
-    voltages = [r/r_total*v_in for r in r_list_ordered]
-    if showWork:
-        print("Resistor ordered voltage division: ", voltages)
-        print("Adjust directions as necessary after getting result.")
-    return voltages
-
-def currentDivision(i_in, r_branch_list_ordered, showWork=False):
-    conductances = [Conductance(r) for r in r_branch_list_ordered]
-    g_total = sum(conductances)
-    currents = [g/g_total*i_in for g in conductances]
-    if showWork:
-        print("Branch ordered current division: ", currents) 
-        print("Adjust directions as necessary after getting result.")
-    return currents
-
 def NodalSimpleAnalysis(vh, vl, r):
     """Current flows from a higher potential to a lower potential in a resistor"""
     i = (vh-vl)/r

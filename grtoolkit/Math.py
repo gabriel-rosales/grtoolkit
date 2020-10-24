@@ -163,7 +163,13 @@ def solveSimultaneousEqs(eq):
 
     solutions = solve_poly_system(eq, freevar)
     solutionList = list()
+
+    freevar = [str(var) for var in freevar]
+
     for possibility in solutions:
+
+        possibility = [float(num) for num in possibility]
+
         solutionList.append(dict(zip(freevar,possibility)))
         return solutionList
 

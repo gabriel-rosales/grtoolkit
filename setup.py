@@ -24,7 +24,7 @@ def filesInFolder(folder, fileType):  # Returns list of files of specified file 
 
 setuptools.setup(
     name="grtoolkit",
-    version="20.10.6",
+    version="20.10.10",
     author="Gabriel Rosales",
     author_email="gabriel.alejandro.rosales@gmail.com",
     description="Common functions for quick python development",
@@ -39,5 +39,5 @@ setuptools.setup(
     ],
     scripts=[f'cmdline\\{file}' for file in filesInFolder('cmdline/',"*")],
     include_package_data=True, #To use MANIFEST.in to include non-code files
-    install_requires=['PyPDF2', 'requests', 'twine', 'wheel', 'pipenv', 'sympy', 'pyautogui', 'numpy', 'pandas', 'matplotlib', 'bs4']
+    install_requires=['PyPDF2', 'requests', 'twine', 'wheel', 'pipenv', 'sympy', 'pyautogui', 'numpy', 'pandas', 'matplotlib', 'bs4', 'pyodbc', 'scipy']
 )

@@ -65,8 +65,8 @@ def preSympifySub(expr,**kwargs):
         preSympifySub(r'Eq(v, L*diff(i,t))',i="10*t*exp(-5*t)")
     """
     for k,v in kwargs.items():
-        regex = rf'(?<!\w){k}(?!\w|\d)'
-        expr = sub(regex,v,expr)
+        regex = rf'(?<!\w|\d){k}(?!\w|\d)'
+        expr = sub(regex,rf"({str(v)})",str(expr))
     return expr
     #Todo: replace keys with vals in eqns
 
@@ -115,8 +115,10 @@ def solveEqs(eq, find, printEq=False, **kwargs):
     """
     #CREATE SET OF ARGUMENTS SUPPLIED TO FUNCTION
     availSet = {find}
-    for k in kwargs.keys():
+    for k,v in kwargs.items():
         availSet.add(k)
+        v=str(v)
+    eq = [preSympifySub(expr,**kwargs) for expr in eq]
     eq = [sympify(expr) for expr in eq]
     freesym = [expr.free_symbols for expr in eq]
     freevar = []
@@ -184,8 +186,8 @@ def solveSimultaneousEqs(eq):
 
 if __name__ == "__main__":
     # eq = list()
-    # eq.append("Eq(-v1/10-v1/5-6-(v1-v2)/2,0)")
-    # eq.append("v2/4-3-6-(v1-v2)/2")
-    # print(solveSimultaneousEqs(eq))
-
-    print(preSympifySub(r'Eq(v, L*diff(i,t))',i="10*t*exp(-5*t)"))
+    # eq.append("Eq(v, L*diff(i,t))")
+    # eq.append("Eq(-v1/10-v1/5-6-(v1-v)/2,0)")
+    # eq.append("v/4-3-6-(v1-v2)/2")
+    # print(solveEqs(eq, find="v", i="10*t*exp(-5*t)", L=0.1))
+    pass

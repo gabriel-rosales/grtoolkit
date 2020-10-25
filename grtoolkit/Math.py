@@ -1,6 +1,7 @@
 import math, numpy as np
 # from sympy import *
 from sympy import sympify, solve, solve_poly_system, symbols
+from re import sub
 
 def magnitude(*args):
     '''Square root of sum'''
@@ -56,6 +57,19 @@ def cross_entropy(Y, P):
     P = np.float_(P)
     return -np.sum(Y * np.log(P) + (1 - Y) * np.log(1 - P))
 
+def preSympifySub(expr,**kwargs):
+    """
+    Designed this as a reponse to the fact that sympify evaluates expressions when performed and therefore would integrate and/or differentiate before I would have a chance to perform substitution.
+    
+    Usage:
+        preSympifySub(r'Eq(v, L*diff(i,t))',i="10*t*exp(-5*t)")
+    """
+    for k,v in kwargs.items():
+        regex = rf'(?<!\w){k}(?!\w|\d)'
+        expr = sub(regex,v,expr)
+    return expr
+    #Todo: replace keys with vals in eqns
+
 def algebraSolve(expr, solve_for,**kwargs):
     """
     Solves single algebraic string equation. 
@@ -63,7 +77,8 @@ def algebraSolve(expr, solve_for,**kwargs):
     Usage: algebraSolve("x**2 + 3*x - 1/2 + y", "x", y=24)
 
     Returns: [ans]
-    **"""
+    """
+    expr = preSympifySub(expr,**kwargs)
     expr=sympify(expr)
     #GENERATE VARIABLE SYMBOLS FROM EXPRESSION
     for sym in expr.free_symbols: 
@@ -148,10 +163,6 @@ def solveSimultaneousEqs(eq):
     '''
 
     eq = [sympify(expr) for expr in eq]
-    # for k,v in subsDict.items():
-    #     # exec(f"{k}=symbols('{sym.name}')")
-    #     eq.append()
-
     freesym = [expr.free_symbols for expr in eq]
     freevar = list()
     for freeset in freesym:
@@ -167,14 +178,14 @@ def solveSimultaneousEqs(eq):
     freevar = [str(var) for var in freevar]
 
     for possibility in solutions:
-
         possibility = [float(num) for num in possibility]
-
         solutionList.append(dict(zip(freevar,possibility)))
         return solutionList
 
 if __name__ == "__main__":
-    eq = list()
-    eq.append("Eq(-v1/10-v1/5-6-(v1-v2)/2,0)")
-    eq.append("v2/4-3-6-(v1-v2)/2")
-    print(solveSimultaneousEqs(eq))
+    # eq = list()
+    # eq.append("Eq(-v1/10-v1/5-6-(v1-v2)/2,0)")
+    # eq.append("v2/4-3-6-(v1-v2)/2")
+    # print(solveSimultaneousEqs(eq))
+
+    print(preSympifySub(r'Eq(v, L*diff(i,t))',i="10*t*exp(-5*t)"))

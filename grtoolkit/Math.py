@@ -190,4 +190,9 @@ if __name__ == "__main__":
     # eq.append("Eq(-v1/10-v1/5-6-(v1-v)/2,0)")
     # eq.append("v/4-3-6-(v1-v2)/2")
     # print(solveEqs(eq, find="v", i="10*t*exp(-5*t)", L=0.1))
+
+    expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1)))")'
+    # print(preSympifySub(expr,v="99*red_ballons"))
+
+    print(expr.find("integrate"))
     pass

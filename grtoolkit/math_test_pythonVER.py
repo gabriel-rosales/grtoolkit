@@ -1,12 +1,7 @@
 from grtoolkit.Math import *
 import re
 
-expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1))-integrate(C*v,(v,v0,v1))+integrate(8*diff(v**2,v),(v,v0,vt), (v4,f3)))")'
-# print(preSympifySub(expr,v="99*red_ballons"))
-# expr.find("integrate")
-print(expr)
-
-def obp(expr): #ordered bracket pairs
+def gen_sorted_bracket_pairs(expr): #ordered bracket pairs
     open_brackets = [m.start() for m in re.finditer('\(', expr)]
     close_brackets = [m.start() for m in re.finditer('\)', expr)]
     copyOpen = open_brackets
@@ -30,13 +25,7 @@ def obp(expr): #ordered bracket pairs
     # print(sorted(sorted_bracket_pairs)) ### BRACKET PAIRS
     return sorted_bracket_pairs
 
-# test = "(tomato{ went } down the ) (street)"
-#note: bug in working with incomplete pairs of brackets
-# print(obp(test))
-sorted_bracket_pairs = obp(expr)
-# print(sorted_bracket_pairs)
-
-def bp_after_func(func_name, expr, sorter_bracket_pairs): #bracket pair after function namefunction opening and closing bracket pairs in str
+def gen_func_bps(func_name, expr, sorted_bracket_pairs): #bracket pair after function namefunction opening and closing bracket pairs in str
     funcs = [m.start() for m in re.finditer(func_name, expr)]
     master_func_bracket_pairs = list()
 
@@ -47,85 +36,110 @@ def bp_after_func(func_name, expr, sorter_bracket_pairs): #bracket pair after fu
                 master_func_bracket_pairs.append(sorted_bracket_pairs[i+1])
     return master_func_bracket_pairs
 
-func_bps = bp_after_func("integrate",expr,sorted_bracket_pairs)
-# print(func_bps)
+def gen_func_sub_bps(func_bps,sorted_bracket_pairs): 
+    """function sub bracket pairs"""
+    #Find bracket pairs inside func_bps:
+    func_sub_bps = list()
+    for fbp in func_bps:
+        temp_sub_bps = list()
+        for bp in sorted_bracket_pairs:
+            if bp[0]>fbp[0] and bp[1]<fbp[1]:
+                temp_sub_bps.append(bp)
+        func_sub_bps.append(temp_sub_bps)
+    return func_sub_bps
 
-# print(expr)
-# for bp in func_bps:
-#     print(expr[bp[0]:bp[1]])
-
-# # Needs to be comma sensitive
-# commas = [m.start() for m in re.finditer(',', expr)]
-# print(commas)
-# print(sorted_bracket_pairs)
-
-#find bracket pairs inside func_bps:
-func_sub_bps = list()
-for fbp in func_bps:
-    temp_sub_bps = list()
-    for bp in sorted_bracket_pairs:
-        if bp[0]>fbp[0] and bp[1]<fbp[1]:
-            temp_sub_bps.append(bp)
-    func_sub_bps.append(temp_sub_bps)
-
-# # func_comma
-# func_sub_bps
-# print(expr)
-# for a in func_sub_bps:
-#     for b in a:
-#         print(expr[b[0]:b[1]+1])
-
-commas = [m.start() for m in re.finditer(',', expr)]
-
-func_comma = list()
-## for each comma:
-i=0
-for fbp in func_bps:
-    temp_comma = list()
-    for comma in commas:
-    ## if comma within function bracket pair:
-        if comma > fbp[0] and comma < fbp[1]: #if comma within function brackets
-            # for func in func_sub_bps[i]: # if comma not within any bracket pair within function
-            #     for sfbp in func:
-            #         if comma < sfbp[0] or comma > sfbp[1]:
-            #             temp_comma.append(comma)
-            AND_counter = list()
-            for sfbp in func_sub_bps[i]: # if comma not within any bracket pair within function
-                if comma < sfbp[0] or comma > sfbp[1]:  # is comma outside of this sub-bracket?
-                    AND_counter.append(1)
-                else:
-                    AND_counter.append(0)
-            if sum(AND_counter) == len(AND_counter): # append comma only when outside all sub-brackets
-                temp_comma.append(comma)
-    if comma:
-        func_comma.append(temp_comma)
-    i+=1
-
-# print(func_comma)
-            # append comma to list
-        # append comma list to master comma list
-    # zipped_list = list(zip(func bracket pair,master comma list))
-
-# func_sections_to_protect = [1]
-# strs2protect = list()
-# for section in zipped_list:
-
-print(expr)
-i=0
-# # for a in func_sub_bps:
-# for b in func_sub_bps[0:2]:
-#     print(expr[b[0]:b[1]+1])
-#     i+=1
-
-zipped_list = list(zip(func_bps,func_comma))
-print(zipped_list)
-
-i=0
-for func, fcommas in zipped_list:
+def gen_func_commas(expr, func_bps, func_sub_bps):
+    #Find commas inside function bracket pairs that are not inside function sub bracket pairs
+    commas = [m.start() for m in re.finditer(',', expr)]
+    func_commas = list()
+    ## for each comma:
     i=0
-    for fcomma in fcommas:
-        if (len(fcommas)-i)>1:
-            print(expr[fcommas[i]+1:fcommas[i+1]])
-        else:
-            print(expr[fcomma+1:func[1]])
+    for fbp in func_bps:
+        temp_comma = list()
+        for comma in commas:
+        ## if comma within function bracket pair:
+            if comma > fbp[0] and comma < fbp[1]: #if comma within function brackets
+                AND_counter = list()
+                for sfbp in func_sub_bps[i]: # if comma not within any bracket pair within function
+                    if comma < sfbp[0] or comma > sfbp[1]:  # is comma outside of this sub-bracket?
+                        AND_counter.append(1)
+                    else:
+                        AND_counter.append(0)
+                if sum(AND_counter) == len(AND_counter): # append comma only when outside all sub-brackets
+                    temp_comma.append(comma)
+        if comma:
+            func_commas.append(temp_comma)
         i+=1
+    return func_commas
+
+def gen_ranges2protect(func_bps, func_comma):
+    #generating list of ranges to protect
+    zipped_list = list(zip(func_bps,func_comma))
+    ranges2protect = list()
+    i=0
+    for func, fcommas in zipped_list:
+        i=0
+        mini_r2p=list()
+        for fcomma in fcommas:
+            if (len(fcommas)-i)>1:
+                # print(expr[fcommas[i]+1:fcommas[i+1]])
+                mini_r2p.append([fcommas[i]+1, fcommas[i+1]])
+            else:
+                # print(expr[fcomma+1:func[1]])
+                mini_r2p.append([fcomma+1,func[1]])
+            i+=1
+        ranges2protect.append(mini_r2p)
+    return ranges2protect
+
+def gen_protect_zones_copy(expr, ranges2protect):
+    protect_zones_copy = list()
+    for a in ranges2protect:
+        for b in a:
+            # print(expr[b[0]:b[1]])
+            protect_zones_copy.append(expr[b[0]:b[1]])
+    return protect_zones_copy
+
+def gen_protect_zones(expr, func_list):
+    protect_zones = list()
+    for func in func_list:
+        sorted_bracket_pairs = gen_sorted_bracket_pairs(expr)
+        func_bps = gen_func_bps(func, expr, sorted_bracket_pairs)
+        func_sub_bps = gen_func_sub_bps(func_bps,sorted_bracket_pairs)
+        func_commas = gen_func_commas(expr, func_bps, func_sub_bps)
+        ranges2protect = gen_ranges2protect(func_bps, func_commas)
+        func_protect_zones = gen_protect_zones_copy(expr, ranges2protect)
+        protect_zones = protect_zones + func_protect_zones
+    return protect_zones
+
+def preSympifySub(expr,**kwargs):
+    """
+    Designed this as a reponse to the fact that sympify evaluates expressions when performed and therefore would integrate and/or differentiate before I would have a chance to perform substitution.
+    
+    Usage:
+        preSympifySub(r'Eq(v, L*diff(i,t))',i="10*t*exp(-5*t)")
+    """
+
+    for k,v in kwargs.items():
+        v=str(v)
+
+    protect_zones = gen_protect_zones(expr, ["integrate", "diff"])
+
+    for k,v in kwargs.items():
+        regex = rf'(?<!\w|\d){k}(?!\w|\d)'
+        expr = sub(regex,rf"({str(v)})",str(expr))
+
+    undue_replaced_zones = gen_protect_zones(expr, ["integrate", "diff"])
+
+    for protect, replaced in list(zip(protect_zones, undue_replaced_zones)):
+        expr = expr.replace(replaced,protect)
+
+    return expr
+
+expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1))-integrate(C*v,(v,v0,v1))+integrate(8*diff(v**2,v),(v,v0,vt), (v4,f3)))")'
+protect_zones = gen_protect_zones(expr, ["integrate", "diff"])
+print(protect_zones)
+
+from re import sub
+print(expr)
+expr_new = preSympifySub(expr,v="99*red_ballons")
+print(expr_new)

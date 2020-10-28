@@ -166,18 +166,30 @@ def preSympifySub(expr,**kwargs):
     for k,v in kwargs.items():
         v=str(v)
 
-    protect_zones, _ = gen_protect_zones(expr, ["integrate", "diff"])
+    func_list = ["integrate", "diff"]
+    func_pres = list()
 
-    for k,v in kwargs.items():
-        regex = rf'(?<!\w|\d){k}(?!\w|\d)'
-        expr = sub(regex,rf"({str(v)})",str(expr))
+    # Check if any function listed is present in expr
+    for func in func_list:
+        if func in expr:
+            func_pres.append(1)
+        else:
+            func_pres.append(0)
 
-    _, undue_replace_zones_ranges = gen_protect_zones(expr, ["integrate", "diff"])
+    if sum(func_pres) >= 1:
+        protect_zones, _ = gen_protect_zones(str(expr), func_list)
+        for k,v in kwargs.items():
+            regex = rf'(?<!\w|\d){k}(?!\w|\d)'
+            expr = sub(regex,rf"({str(v)})",str(expr))
 
-    for protect, replaced in list(zip(protect_zones, undue_replace_zones_ranges)):
-        # expr = expr.replace(replaced,protect)
-        expr = stringMutation(expr,protect,replaced)
-
+        _, undue_replace_zones_ranges = gen_protect_zones(str(expr), func_list)
+        for protect, replaced in list(zip(protect_zones, undue_replace_zones_ranges)):
+            # expr = expr.replace(replaced,protect)
+            expr = stringMutation(expr,protect,replaced)
+    else:
+        for k,v in kwargs.items():
+            regex = rf'(?<!\w|\d){k}(?!\w|\d)'
+            expr = sub(regex,rf"({str(v)})",str(expr))
     return expr
 
 if __name__ == "__main__":

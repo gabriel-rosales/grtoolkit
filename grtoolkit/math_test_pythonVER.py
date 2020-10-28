@@ -4,13 +4,16 @@ import re
 def gen_sorted_bracket_pairs(expr): #ordered bracket pairs
     open_brackets = [m.start() for m in re.finditer('\(', expr)]
     close_brackets = [m.start() for m in re.finditer('\)', expr)]
-    copyOpen = open_brackets
+    # copyOpen = open_brackets
     taken = list()
     bracket_pairs = list()
     
     all_open_brackets = [[open,'o'] for open in open_brackets]
     all_close_brackets = [[close,'c'] for close in close_brackets]
     all_brackets = sorted(all_open_brackets + all_close_brackets)
+
+    if len(all_open_brackets) != len(all_close_brackets):
+        raise "Error: Non-even brackets."
 
     for b in range(len(all_brackets)):
         if all_brackets[b][1] == "c":
@@ -111,10 +114,33 @@ def gen_protect_zones(expr, func_list):
         protect_zones = protect_zones + func_protect_zones
     return protect_zones
 
+def gen_replace_zones(expr, func_list):
+    replace_zones = list()
+    for func in func_list:
+        sorted_bracket_pairs = gen_sorted_bracket_pairs(expr)
+        func_bps = gen_func_bps(func, expr, sorted_bracket_pairs)
+        func_sub_bps = gen_func_sub_bps(func_bps,sorted_bracket_pairs)
+        func_commas = gen_func_commas(expr, func_bps, func_sub_bps)
+        ranges2replace = gen_ranges2protect(func_bps, func_commas)
+        replace_zones = replace_zones + ranges2replace
+
+    replace_zones_copy = list()
+    for a in replace_zones:
+        for b in a:
+            # print(expr[b[0]:b[1]])
+            replace_zones_copy.append([b[0],b[1]])
+    return replace_zones_copy
+
+def stringMutation(old, new, replacement_range):
+    #slice into 3 parts
+    pre = old[:replacement_range[0]]
+    cen = old[replacement_range[0]:replacement_range[1]]
+    suf = old[replacement_range[1]:]
+    return pre + new + suf
+
 def preSympifySub(expr,**kwargs):
     """
     Designed this as a reponse to the fact that sympify evaluates expressions when performed and therefore would integrate and/or differentiate before I would have a chance to perform substitution.
-    
     Usage:
         preSympifySub(r'Eq(v, L*diff(i,t))',i="10*t*exp(-5*t)")
     """
@@ -123,19 +149,23 @@ def preSympifySub(expr,**kwargs):
         v=str(v)
 
     protect_zones = gen_protect_zones(expr, ["integrate", "diff"])
+    protect_zones.reverse()
 
     for k,v in kwargs.items():
         regex = rf'(?<!\w|\d){k}(?!\w|\d)'
         expr = sub(regex,rf"({str(v)})",str(expr))
 
-    undue_replaced_zones = gen_protect_zones(expr, ["integrate", "diff"])
+    undue_replaced_zones = gen_replace_zones(expr, ["integrate", "diff"])
+    undue_replaced_zones.reverse()
 
     for protect, replaced in list(zip(protect_zones, undue_replaced_zones)):
-        expr = expr.replace(replaced,protect)
+        # expr = expr.replace(replaced,protect)
+        expr = stringMutation(expr,protect,replaced)
 
     return expr
 
 expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1))-integrate(C*v,(v,v0,v1))+integrate(8*diff(v**2,v),(v,v0,vt), (v4,f3)))")'
+# expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1)'
 protect_zones = gen_protect_zones(expr, ["integrate", "diff"])
 print(protect_zones)
 
@@ -143,3 +173,5 @@ from re import sub
 print(expr)
 expr_new = preSympifySub(expr,v="99*red_ballons")
 print(expr_new)
+
+# gen_replace_zones(expr, ["integrate", "diff"])

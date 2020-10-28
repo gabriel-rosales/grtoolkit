@@ -2,6 +2,8 @@ import math, numpy as np
 # from sympy import *
 from sympy import sympify, solve, solve_poly_system, symbols
 from re import sub
+import grtoolkit.Math.sympyInterface
+from grtoolkit.Math.sympyInterface import preSympifySub
 
 def magnitude(*args):
     '''Square root of sum'''
@@ -57,18 +59,18 @@ def cross_entropy(Y, P):
     P = np.float_(P)
     return -np.sum(Y * np.log(P) + (1 - Y) * np.log(1 - P))
 
-def preSympifySub(expr,**kwargs):
-    """
-    Designed this as a reponse to the fact that sympify evaluates expressions when performed and therefore would integrate and/or differentiate before I would have a chance to perform substitution.
+# def preSympifySub(expr,**kwargs):
+#     """
+#     Designed this as a reponse to the fact that sympify evaluates expressions when performed and therefore would integrate and/or differentiate before I would have a chance to perform substitution.
     
-    Usage:
-        preSympifySub(r'Eq(v, L*diff(i,t))',i="10*t*exp(-5*t)")
-    """
-    for k,v in kwargs.items():
-        regex = rf'(?<!\w|\d){k}(?!\w|\d)'
-        expr = sub(regex,rf"({str(v)})",str(expr))
-    return expr
-    #Todo: replace keys with vals in eqns
+#     Usage:
+#         preSympifySub(r'Eq(v, L*diff(i,t))',i="10*t*exp(-5*t)")
+#     """
+#     for k,v in kwargs.items():
+#         regex = rf'(?<!\w|\d){k}(?!\w|\d)'
+#         expr = sub(regex,rf"({str(v)})",str(expr))
+#     return expr
+#     #Todo: replace keys with vals in eqns
 
 def algebraSolve(expr, solve_for,**kwargs):
     """
@@ -185,14 +187,9 @@ def solveSimultaneousEqs(eq):
         return solutionList
 
 if __name__ == "__main__":
-    # eq = list()
-    # eq.append("Eq(v, L*diff(i,t))")
-    # eq.append("Eq(-v1/10-v1/5-6-(v1-v)/2,0)")
-    # eq.append("v/4-3-6-(v1-v2)/2")
-    # print(solveEqs(eq, find="v", i="10*t*exp(-5*t)", L=0.1))
+    expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1))-integrate(C*v,(v,v0,v1))+integrate(8*diff(v**2,v),(v,v0,vt), (v4,f3)))")'
+    
 
-    expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1)))")'
-    # print(preSympifySub(expr,v="99*red_ballons"))
-
-    print(expr.find("integrate"))
-    pass
+    print(expr, "\n")
+    expr2 = preSympifySub(expr,v="99*red_ballons")
+    print(expr2)

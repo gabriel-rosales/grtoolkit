@@ -83,17 +83,20 @@ def algebraSolve(expr, solve_for,**kwargs):
     expr = preSympifySub(expr,**kwargs)
     expr=sympify(expr)
     #GENERATE VARIABLE SYMBOLS FROM EXPRESSION
-    for sym in expr.free_symbols: 
-        exec(f"{sym.name}=symbols('{sym.name}')")
-        #MAKE solve_for STRING EQUAL REQUIRED EXPRESSION VARIABLE SYMBOL
-        if solve_for == sym.name:    
-            solve_for = sym
-        
-        # SUBSTITUTE KARGs FOR EXPRESSION SYMBOLS
-        for k, v in kwargs.items():
-            if k == sym.name:
-                expr=expr.subs(k,v)
-    return solve(expr, solve_for)
+    # if expr.free_symbols: # if expr.freesymbols is not empty
+    if not isinstance(expr,bool):
+        for sym in expr.free_symbols: 
+            exec(f"{sym.name}=symbols('{sym.name}')")
+            #MAKE solve_for STRING EQUAL REQUIRED EXPRESSION VARIABLE SYMBOL
+            if solve_for == sym.name:    
+                solve_for = sym
+            # SUBSTITUTE KARGs FOR EXPRESSION SYMBOLS
+            for k, v in kwargs.items():
+                if k == sym.name:
+                    expr=expr.subs(k,v)
+        return solve(expr, solve_for)
+    else:
+        return expr #if expression not possible, just return expression
 
 def solveEqs(eq, find, printEq=False, **kwargs):
     """
@@ -140,7 +143,7 @@ def solveEqs(eq, find, printEq=False, **kwargs):
     for zippedList in zipper:
         solution.append(algebraSolve(eq[zippedList[0]],find, **kwargs))
 
-    printEquationsSolution(eq, solution) #print Equations and Solutions to console
+    printEquationsSolution(eq, solution, printEq=printEq) #print Equations and Solutions to console
     return solution
 
 def printEquations(eq):
@@ -149,9 +152,9 @@ def printEquations(eq):
         print(equation)
 
 def printEquationsSolution(eq, solution, printEq=True):
-    #if printEq:
     print("\n")
-    print("Equations"), printEquations(eq), print("\n")
+    if printEq:
+        print("Equations"), printEquations(eq), print("\n")
     print("Solutions"), printEquations(solution), print("\n")
 
 def solveSimultaneousEqs(eq):
@@ -187,9 +190,11 @@ def solveSimultaneousEqs(eq):
         return solutionList
 
 if __name__ == "__main__":
-    expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1))-integrate(C*v,(v,v0,v1))+integrate(8*diff(v**2,v),(v,v0,vt), (v4,f3)))")'
+    # expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1))-integrate(C*v,(v,v0,v1))+integrate(8*diff(v**2,v),(v,v0,vt), (v4,f3)))")'
     
 
-    print(expr, "\n")
-    expr2 = preSympifySub(expr,v="99*red_ballons")
-    print(expr2)
+    # print(expr, "\n")
+    # expr2 = preSympifySub(expr,v="99*red_ballons")
+    # print(expr2)
+    # Capacitance(find="C", epsilon=49,A=2,d=100)
+    pass

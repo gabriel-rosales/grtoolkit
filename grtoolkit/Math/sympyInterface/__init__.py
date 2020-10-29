@@ -159,6 +159,7 @@ def stringMutation(old, new, replacement_range):
 def preSympifySub(expr,**kwargs):
     """
     Designed this as a reponse to the fact that sympify evaluates expressions when performed and therefore would integrate and/or differentiate before I would have a chance to perform substitution.
+    
     Usage:
         preSympifySub(r'Eq(v, L*diff(i,t))',i="10*t*exp(-5*t)")
     """
@@ -171,7 +172,7 @@ def preSympifySub(expr,**kwargs):
 
     # Check if any function listed is present in expr
     for func in func_list:
-        if func in expr:
+        if func in str(expr):
             func_pres.append(1)
         else:
             func_pres.append(0)
@@ -193,9 +194,19 @@ def preSympifySub(expr,**kwargs):
     return expr
 
 if __name__ == "__main__":
-    expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1))-integrate(C*v,(v,v0,v1))+integrate(8*diff(v**2,v),(v,v0,vt), (v4,f3)))")'
+    pass
+    # expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1))-integrate(C*v,(v,v0,v1))+integrate(8*diff(v**2,v),(v,v0,vt), (v4,f3)))")'
     
+    # print(expr, "\n")
+    # expr2 = preSympifySub(expr,v="99*red_ballons")
+    # print(expr2) 
+    
+    # import grtoolkit.Circuits as c 
+    # c.Capacitors.Capacitance("C", 
+    #                         epsilon=48,
+    #                         A = 89,
+    #                         d = 79) 
+    # from grtoolkit.Math import solveEqs
 
-    print(expr, "\n")
-    expr2 = preSympifySub(expr,v="99*red_ballons")
-    print(expr2)
+    # from sympy import sympify, solve, symbols
+    # Capacitance("C", epsilon=49, A=56, d=79)

@@ -44,6 +44,7 @@ def Value(find, printEq=False, **kwargs):
     """
     eq = list()
     eq.append("Eq(v,L*di/dt)")
+    eq.append("Eq(v,L*diff(i,t))")
     eq.append("Eq(i,1/L*integrate(v,(t,t0,t1))+i0)")
     eq.append("Eq(p,v*i)")
     eq.append("Eq(p, L*di/dt*i)")
@@ -61,7 +62,7 @@ def inductance(find="L", printEq=False, **kwargs):
                 mu=permeability of core
     """
     eq = list()
-    eq.append("Eq(L,N**2,mu*A/l)")    
+    eq.append("Eq(L,N**2*mu*A/l)")    
     return solveEqs(eq, find, printEq=printEq, **kwargs)
 
 def inductorsInSeries(l_list):

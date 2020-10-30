@@ -1,5 +1,4 @@
 import math, numpy as np
-# from sympy import *
 from sympy import sympify, solve, solve_poly_system, symbols
 from re import sub
 import grtoolkit.Math.sympyInterface
@@ -59,19 +58,6 @@ def cross_entropy(Y, P):
     P = np.float_(P)
     return -np.sum(Y * np.log(P) + (1 - Y) * np.log(1 - P))
 
-# def preSympifySub(expr,**kwargs):
-#     """
-#     Designed this as a reponse to the fact that sympify evaluates expressions when performed and therefore would integrate and/or differentiate before I would have a chance to perform substitution.
-    
-#     Usage:
-#         preSympifySub(r'Eq(v, L*diff(i,t))',i="10*t*exp(-5*t)")
-#     """
-#     for k,v in kwargs.items():
-#         regex = rf'(?<!\w|\d){k}(?!\w|\d)'
-#         expr = sub(regex,rf"({str(v)})",str(expr))
-#     return expr
-#     #Todo: replace keys with vals in eqns
-
 def algebraSolve(expr, solve_for,**kwargs):
     """
     Solves single algebraic string equation. 
@@ -98,7 +84,7 @@ def algebraSolve(expr, solve_for,**kwargs):
     else:
         return expr #if expression not possible, just return expression
 
-def solveEqs(eq, find, printEq=False, **kwargs):
+def solveEqs(eq, find, printEq=True, **kwargs):
     """
     Solves multiple equations independently in search for variable.
     Allows substitution via kwargs.
@@ -119,6 +105,7 @@ def solveEqs(eq, find, printEq=False, **kwargs):
         ]
     """
     #CREATE SET OF ARGUMENTS SUPPLIED TO FUNCTION
+    original_eq_ref = eq.copy()
     availSet = {find}
     for k,v in kwargs.items():
         availSet.add(k)
@@ -143,7 +130,7 @@ def solveEqs(eq, find, printEq=False, **kwargs):
     for zippedList in zipper:
         solution.append(algebraSolve(eq[zippedList[0]],find, **kwargs))
 
-    printEquationsSolution(eq, solution, printEq=printEq) #print Equations and Solutions to console
+    printEquationsSolution(original_eq_ref, solution, find, printEq=printEq) #print Equations and Solutions to console
     return solution
 
 def printEquations(eq):
@@ -151,11 +138,18 @@ def printEquations(eq):
     for equation in eq:
         print(equation)
 
-def printEquationsSolution(eq, solution, printEq=True):
+def printEquationsSolution(eq, solution, find, printEq=True):
     print("\n")
     if printEq:
-        print("Equations"), printEquations(eq), print("\n")
-    print("Solutions"), printEquations(solution), print("\n")
+        for i in range(len(eq)):
+            print(
+f"""
+OPTION {i}
+From Equation: {eq[i]}:
+{find} = {str(solution[i])}"""
+)
+        # print("Equations"), printEquations(eq), print("\n")
+        # print("Solutions"), printEquations(solution), print("\n")
 
 def solveSimultaneousEqs(eq):
     '''
@@ -188,13 +182,3 @@ def solveSimultaneousEqs(eq):
         possibility = [float(num) for num in possibility]
         solutionList.append(dict(zip(freevar,possibility)))
         return solutionList
-
-if __name__ == "__main__":
-    # expr = 'eq.append("Eq(w,integrate(C*v,(v,v0,v1))-integrate(C*v,(v,v0,v1))+integrate(8*diff(v**2,v),(v,v0,vt), (v4,f3)))")'
-    
-
-    # print(expr, "\n")
-    # expr2 = preSympifySub(expr,v="99*red_ballons")
-    # print(expr2)
-    # Capacitance(find="C", epsilon=49,A=2,d=100)
-    pass

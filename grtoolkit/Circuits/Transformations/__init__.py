@@ -1,35 +1,3 @@
-def delta2wye(Ra, Rb, Rc):
-    """
-    ''------RA-------''''R2'''''''''R3''''
-    '''dd''''''''dd'''''''' y'''''y'''''''
-    '''''RC''''RB''''''''''''''y''''''''''
-    '''''''d''d''''''''''''''''y''''''''''
-    ''''''''dd'''''''''''''''''R1'''''''''
-
-    Returns R1, R2, R3
-    """
-    Rt = Ra+Rb+Rc
-    R1 = Rb*Rc/Rt
-    R2 = Rc*Ra/Rt
-    R3 = Ra*Rb/Rt
-    return R1, R2, R3
-
-def wye2delta(R1, R2, R3):
-    """
-    ''------RA-------''''R2'''''''''R3''''
-    '''dd''''''''dd'''''''' y'''''y'''''''
-    '''''RC''''RB''''''''''''''y''''''''''
-    '''''''d''d''''''''''''''''y''''''''''
-    ''''''''dd'''''''''''''''''R1'''''''''
-
-    Returns Ra, Rb, Rc
-    """
-    Rx = R1*R2 + R2*R3 + R3*R1
-    Ra = Rx/R1
-    Rb = Rx/R2
-    Rc = Rx/R3
-    return Ra, Rb, Rc
-
 def vSource2cSource(v_s,R):
     """
     Voltage source with resistor in series replaced by 

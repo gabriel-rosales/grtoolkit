@@ -131,3 +131,38 @@ def instrumentationAmplifier():
     eq = list()
     eq.append("Eq(vo,A_v*(v2-v1)")
     eq.append("Eq(Av, 1 + 2*R / R_G")
+
+def integrator(find="v_o", printEq=False, **kwargs):
+    """
+    An integrator is an op amp circuit whose output is proportional 
+    to the integral of the input signal.
+    
+    variables: 
+            v_o, v1, v2, v3 = Open loop voltage gain, voltage in
+            R2, R1 = resistors (view reference image)
+    """
+    eq = list()
+    eq.append("Eq(i_R, i_C")
+    eq.append("Eq(i_R, vi/R")
+    eq.append("Eq(i_C, -C*d_vo/dt")
+    eq.append("Eq(i_C, -C*diff(vo,t)")
+    eq.append("Eq(vo, -1/(R*C) * integrate(vi,(t,0,tf)))")
+    return solveEqs(eq, find, printEq=printEq, **kwargs)
+
+def differentiator(find="v_o", printEq=False, **kwargs):
+    """
+    A differentiator is an op amp circuit whose output is 
+    proportional to the rate of change of the input signal.
+    
+    variables: 
+            v_o, v1, v2, v3 = Open loop voltage gain, voltage in
+            R2, R1 = resistors (view reference image)
+    """
+    eq = list()
+    eq.append("Eq(i_R, i_C")
+    eq.append("Eq(i_R, -vo/R")
+    eq.append("Eq(i_C, C*d_vi/dt")
+    eq.append("Eq(i_C, C*diff(vi,t)")
+    eq.append("Eq(vo, -R*C*d_vi/dt)")
+    eq.append("Eq(vo, -R*C*diff(vi,t))")
+    return solveEqs(eq, find, printEq=printEq, **kwargs)

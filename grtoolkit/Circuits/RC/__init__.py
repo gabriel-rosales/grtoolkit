@@ -1,4 +1,7 @@
-from grtoolkit.Math import solveEqs
+from grtoolkit.Math import solveEqs, algebraSolve
+from sympy import symbols, Piecewise, sympify
+
+#Capacitors and inductors are considered fully charged at 5 time constants.
 
 def naturalResponse(find, printEq=True, **kwargs):
     """
@@ -29,35 +32,32 @@ def naturalResponse(find, printEq=True, **kwargs):
     eq.append("Eq(w, .5 * C * V0**2 * (1 - exp(-2*t / tau)))")
     return solveEqs(eq, find, printEq=printEq, **kwargs)
 
-# def RL_natural_response(find, printEq=True, **kwargs):
-#     """
-#     Source-Free
+def stepResponse(find = "v",**kwargs):
+    """
+    The step response of a circuit is its behavior when the excitation is the
+    step function, which may be a voltage or a current source.
+    """
+    eq = "Eq(v,Piecewise((V0, t<-t0), ((Vs + (V0-Vs)*exp(-t/tau)), t>-t0)))"
+    return algebraSolve(eq,solve_for=find,**kwargs)
 
-#     The natural response of a circuit refers to the behavior (in terms of
-#     voltages and currents) of the circuit itself, with no external sources of
-#     excitation.
+def completeResponse(find = "v",**kwargs):
+    eq = list()
 
-#     i(0) = I0
-    
-#     variables: 
-#             v_o, v1, v2, v3 = Open loop voltage gain, voltage in
-#             R2, R1 = resistors (view reference image)
+    # Complete Response = natural response (stored energy) + forced response (independent source)
+    eq.append("Eq(v, v_n + v_f)")
+    eq.append("Eq(v_n, V0 * exp(-t / tau))")
+    eq.append("Eq(v_f, V_s * (1-exp(-t/tau)))")
 
-#             tau = The time constant; the time required for the response to
-#             decay to a factor of 1/e or 36.8 percent of its initial value.
-#     """
-#     eq = list()
-#     eq.append("Eq(tau, L_eq / R_eq")
-#     eq.append("Eq(w0, .5 * L * I0**2")
-#     eq.append("Eq(v_L + v_R, 0")
-#     eq.append("Eq(L * di/dt + R*i, 0")
-#     eq.append("Eq(L * diff(i,t) + R*i, 0")
-#     eq.append("Eq(i, I0*exp(-t/tau))")
-#     eq.append("Eq(v_R, i * R)")
-#     eq.append("Eq(v_R, I0 * R * exp(-2*t/tau))")
-#     eq.append("Eq(p, v_R * i)")
-#     eq.append("Eq(p, I0**2 * R * exp(-2*t/tau))")
-#     eq.append("Eq(w, integrate(p,(t,0,tf)))")
-#     eq.append("Eq(w,.5 * L * I0**2 * (1-exp(-2*t/tau)))")
+    # Complete Response = transient response (temporary part) + steady-state response (permanent part)
+    # Transient response is the circuit's temporary response that will die out with time.
+    # The steady-state response is the behavior of the circuit a long time after an external excitation is applied.
+    eq.append("Eq(v, v_t + v_ss)")
+    eq.append("Eq(v_t, (V0-V_s * exp(-t / tau))")
+    eq.append("Eq(v_ss, V_s")
+    # Or
+    eq.append("Eq(v, v_inf + (v0-v_inf) * exp(-t / tau))")
+    #  where v_inf = the final voltage of the capacitor, v0 = the initial capacitor voltage, tau = time constant
+    return solveEqs(eq, find, printEq=printEq, **kwargs)
 
-#     return solveEqs(eq, find, printEq=printEq, **kwargs)
+if __name__ == "__main__":
+    print(stepResponse(find="tau"))

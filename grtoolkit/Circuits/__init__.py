@@ -5,6 +5,9 @@ import grtoolkit.Circuits.Filters
 import grtoolkit.Circuits.Inductors as Inductors
 import grtoolkit.Circuits.OpAmps
 import grtoolkit.Circuits.Resistors as Resistors
+import grtoolkit.Circuits.RC as RC
+import grtoolkit.Circuits.RL as RL
+import grtoolkit.Circuits.SingularityFunctions as SF
 import grtoolkit.Circuits.Transformations
 import grtoolkit.Circuits.Transistors
 from grtoolkit.Math import solveEqs, solveSimultaneousEqs

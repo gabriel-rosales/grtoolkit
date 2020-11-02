@@ -1,5 +1,7 @@
 from grtoolkit.Math import solveEqs
 
+#Capacitors and inductors are considered fully charged at 5 time constants.
+
 def naturalResponse(find, printEq=True, **kwargs):
     """
     Source-Free
@@ -31,4 +33,10 @@ def naturalResponse(find, printEq=True, **kwargs):
     eq.append("Eq(w, integrate(p,(t,0,tf)))")
     eq.append("Eq(w,.5 * L * I0**2 * (1-exp(-2*t/tau)))")
 
+    return solveEqs(eq, find, printEq=printEq, **kwargs)
+
+def completeResponse(find = "i",**kwargs):
+    eq = list()
+    eq.append("Eq(i, i_inf + (i0-i_inf) * exp(-t / tau))")
+    #  where v_inf = the final voltage of the capacitor, v0 = the initial capacitor voltage, tau = time constant
     return solveEqs(eq, find, printEq=printEq, **kwargs)

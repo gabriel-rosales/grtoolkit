@@ -1,4 +1,21 @@
 import setuptools, os, sys, re
+from grtoolkit.Storage import search, File
+from os.path import dirname
+
+def gen_manifestation():
+    manifestation = File(dirname(__file__) + "\\MANIFEST.in")
+    _, files = search(dirname(__file__),viewPrint=False, rootInclude=True,abs=True)
+
+    exts = [".jpg", "png", ".docx", ".pdf", ".accdb", ".exe", ".csv", ".zip"]
+    protect_files = list()
+
+    for file in files:
+        for ext in exts:
+            if file[(len(file)-len(ext)):] == ext:
+                protect_files.append(file)
+
+    for i in range(len(protect_files)):
+        manifestation.write_and_append("include " + protect_files[i].replace('\\', '/'))
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -22,9 +39,11 @@ def filesInFolder(folder, fileType):  # Returns list of files of specified file 
 
 # NOTE: PATHS CALCULATED IN SETUP.PY NEED UNIX STYLE PATH REFERENCES WITH DIFFERENT SLASHES
 
+gen_manifestation() #Update Manifestation File
+
 setuptools.setup(
     name="grtoolkit",
-    version="20.10.21",
+    version="20.11.4",
     author="Gabriel Rosales",
     author_email="gabriel.alejandro.rosales@gmail.com",
     description="Common functions for quick python development",

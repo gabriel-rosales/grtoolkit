@@ -1,2 +1,9 @@
-include grtoolkit/PropertyTables.accdb
-include grtoolkit\Circuits\OpAmps\OpAmp_Summary.PNG
+include c:/Users/gabrielr/Documents/Git Repositories/grtoolkit/grtoolkit/PropertyTables.accdb
+include c:/Users/gabrielr/Documents/Git Repositories/grtoolkit/grtoolkit/Circuits/Important Characteristics of Basic Elements.png
+include c:/Users/gabrielr/Documents/Git Repositories/grtoolkit/grtoolkit/Circuits/OpAmps/AmplifierEquivalentCircuits.docx
+include c:/Users/gabrielr/Documents/Git Repositories/grtoolkit/grtoolkit/Circuits/OpAmps/summingIntegrator.jpg
+include c:/Users/gabrielr/Documents/Git Repositories/grtoolkit/grtoolkit/Mechanics/Friction/FrictionCoeffs.csv
+include c:/Users/gabrielr/Documents/Git Repositories/grtoolkit/grtoolkit/Resources/AccessDatabaseEngine.exe
+include c:/Users/gabrielr/Documents/Git Repositories/grtoolkit/grtoolkit/Resources/AccessDatabaseEngine_X64.exe
+include c:/Users/gabrielr/Documents/Git Repositories/grtoolkit/grtoolkit/TTS/Resources/balcon.zip
+include c:/Users/gabrielr/Documents/Git Repositories/grtoolkit/grtoolkit/TTS/Resources/Daniel 22Khz MLG voice.exe

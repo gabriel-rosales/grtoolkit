@@ -1,5 +1,4 @@
 import grtoolkit, subprocess
+from os.path import dirname
 
-print(grtoolkit.cwd())
-
-subprocess.Popen(rf'explorer /select,"{grtoolkit.cwd()}"')
+subprocess.Popen(rf'explorer /select,"{dirname(dirname(grtoolkit.__file__))}"')

@@ -182,3 +182,31 @@ def solveSimultaneousEqs(eq):
         possibility = [float(num) for num in possibility]
         solutionList.append(dict(zip(freevar,possibility)))
         return solutionList
+
+def sourceFreeSeriesEquivalentCircuit(R, C, L, find="i", printEq=True, **kwargs):
+    alpha = R / (2 * L)
+    w0 = 1 / (L*C)**(1/2)
+    s1 = -alpha + (alpha**2 - w0**2)**(1/2)
+    s2 = -alpha - (alpha**2 - w0**2)**(1/2)
+    # j = (-1)**(1/2)
+    # j = complex(1)
+
+    eq = list()
+    if alpha > w0:
+        eq.append("Eq(i, A1*exp(s1*t) + A2*exp(s2*t))")
+    if alpha == w0: #C=4*L/R**2
+        eq.append("Eq(i, (A2 + A1*t)*exp(-alpha*t))")
+    if alpha < w0:
+        # wd = (w0**2 - alpha**2)**(1/2)
+        # B1 = A1 + A2
+        # B2 = j*(A1 - A2)
+        eq.append("Eq(i, exp(-alpha*t)*(B1*cos(wd*t) + B2*sin(wd*t)))")
+
+    kwargs.update({"wd": "(w0**2 - alpha**2)**(1/2)", "alpha": alpha, "w0":w0, "s1":s1, "s2":s2, "B1": "A1 + A2", "B2": "j*(A1 - A2)"})
+
+    return solveEqs(eq,find="i", printEq=printEq, **kwargs)
+
+if __name__ == "__main__":
+    sourceFreeSeriesEquivalentCircuit(R=5,C=4*1/5**2,L=1)
+
+    # Eq(i, exp(-(2.5)*t)*((A1 + A2)*cos((((10.0)**2 - (2.5)**2)**(1/2))*t) + (j*(A1 - A2))*sin((((10.0)**2 - (2.5)**2)**(1/2))*t))

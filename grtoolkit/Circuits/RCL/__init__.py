@@ -17,6 +17,7 @@ from grtoolkit.Math import solveEqs
 # Find v0_minus, i0_minus, diff(v0_minus,t), diff(i0_minus,t), v_inf, i_inf
 
 def sourceFreeSeriesEquivalentCircuit(R, C, L, find="i", printEq=True, **kwargs):
+    """Works in radians, not degrees"""
     alpha = R / (2 * L)
     w0 = 1 / (L*C)**(1/2)
     s1 = -alpha + (alpha**2 - w0**2)**(1/2)
@@ -43,7 +44,7 @@ def sourceFreeSeriesEquivalentCircuit(R, C, L, find="i", printEq=True, **kwargs)
     return solveEqs(eq,find="i", printEq=printEq, **kwargs)
 
 def sourceFreeParallelEquivalentCircuit(R, C, L, find="v", printEq=True, **kwargs):
-
+    """Works in radians, not degrees"""
     alpha = 1 / (2*R*C)
     w0 = 1 / (L*C)**(1/2)
     s1 = -alpha + (alpha**2 - w0**2)**(1/2)
@@ -68,7 +69,7 @@ def sourceFreeParallelEquivalentCircuit(R, C, L, find="v", printEq=True, **kwarg
     return solveEqs(eq,find="i", printEq=printEq, **kwargs)
 
 def stepResponseSeriesEquivalentCircuit(R, C, L, find="i", printEq=True, **kwargs):
-    # NOT DONE
+    """Works in radians, not degrees"""
     alpha = R / (2 * L)
     w0 = 1 / (L*C)**(1/2)
     s1 = -alpha + (alpha**2 - w0**2)**(1/2)
@@ -95,7 +96,7 @@ def stepResponseSeriesEquivalentCircuit(R, C, L, find="i", printEq=True, **kwarg
     return solveEqs(eq,find="i", printEq=printEq, **kwargs)
 
 def stepResponseParallelEquivalentCircuit(R, C, L, find="i", printEq=True, **kwargs):
-    # NOT DONE
+    """Works in radians, not degrees"""
     alpha = R / (2 * L)
     w0 = 1 / (L*C)**(1/2)
     s1 = -alpha + (alpha**2 - w0**2)**(1/2)

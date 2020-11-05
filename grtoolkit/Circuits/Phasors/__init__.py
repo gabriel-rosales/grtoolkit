@@ -20,6 +20,11 @@ from sympy import pi
 # sin(wt +/- 90 degrees) = +/-cos(wt)
 # cos(wt +/- 90 degrees) = -/+sin(wt)
 
+# Example
+# A*cos(w*t) + B*sin(w*t) = C*cos(w*t - pheta)
+# C = sqrt(A**2 + B**2)
+# pheta = tan**-1 (B/A)
+
 def T(w):
     """
     Period

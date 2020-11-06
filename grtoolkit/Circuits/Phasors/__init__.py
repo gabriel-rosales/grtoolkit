@@ -87,7 +87,8 @@ def w(f):
 # exp(+/-j*phi) = cos(phi) +/- j*sin(phi)
 # cos(phi) = Re( exp(j*phi))
 # sin(phi) = Im(exp(j*phi))
-
+# v(t) = Re(Vm*cos(w*t+phi))
+# V is used as the phasor representation of v(t)
 
 # USE cmath? http://ibiblio.org/kuphaldt/socratic/model/mod_phasor.pdf
 # >>> from math import *

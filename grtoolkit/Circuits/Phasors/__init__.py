@@ -20,10 +20,13 @@ from sympy import pi
 # sin(wt +/- 90 degrees) = +/-cos(wt)
 # cos(wt +/- 90 degrees) = -/+sin(wt)
 
-# Example
-# A*cos(w*t) + B*sin(w*t) = C*cos(w*t - pheta)
-# C = sqrt(A**2 + B**2)
-# pheta = tan**-1 (B/A)
+# Adding
+# A*cos(w*t) + B*sin(w*t) = C*cos(w*t-phase)
+# C = (A**2+B**2)**(1/2)
+# phase = tan-1(B/A)
+
+# Example:
+# 3*cos(wt) - 4*sin(w*t) = 5*cos(wt + 53.1)
 
 def T(w):
     """
@@ -43,6 +46,10 @@ def f(w):
 def w(f):
     """Angular frequency"""
     return 2*pi*f
+
+# A complex number can be written in rectangular form as 
+# z = x + jy = r*angle(phase) = r*exp(j*phase)
+# j = (-1)**.5
 
 if __name__ == "__main__":
     pass

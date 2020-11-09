@@ -112,6 +112,31 @@ def w(f):
 # >>> degrees(phase(r + zc + zl))
 # -25.10169387356105
 
+def polar_deg_view(polar):
+    """
+    Does not return actual polar as actual polar needs to be in radians. 
+    For viewing ONLY.
+    """
+    polar_fix = list()
+    polar_fix.append(polar[0])
+    polar_fix.append(degrees(polar[1]))
+    return polar_fix
+
+# def sinusoid2phasor():
+#     pass
+
+# def cos2Phasor(A,phi):
+#     return polar()
+
+def polar2rect(r,phi):
+    return rect(r,phi)
+
+def rect2polar(z):
+    return polar(z)
+
+#Sinusoid-phasor transformation
+# A*cos(wt+phi) = A angle(phi)
+# A*sin(wt+phi) = A angle(phi - 90)
 
 if __name__ == "__main__":
     pass

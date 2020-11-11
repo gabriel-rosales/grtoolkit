@@ -1,4 +1,6 @@
 from sympy import pi
+from math import *
+from cmath import *
 
 # General expression for sinusoid:
 # v(t) = Vm*sin(w*t + phi)
@@ -138,6 +140,71 @@ def rect2polar(z):
 # A*cos(wt+phi) = A angle(phi)
 # A*sin(wt+phi) = A angle(phi - 90)
 
+class complexEq:
+    def __init__(self):
+        # self.rect = None
+        # self.polar = None
+        # self.sinusoid = None
+        pass
+
+    @property
+    def rect(self):
+        return self._rect
+    @rect.setter
+    def rect(self, val):
+        self._rect = val
+
+    @property
+    def polar(self):
+        return self.polar
+    @polar.setter
+    def polar(self, val):
+        self.polar = val
+
+    @property
+    def sinusoid(self):
+        return self.sinusoid
+    @sinusoid.setter
+    def sinusoid(self, val):
+        self.sinusoid = val
+
+
+    def polar_deg_view(polar):
+        """
+        Does not return actual polar as actual polar needs to be in radians. 
+        For viewing ONLY.
+        """
+        polar_fix = list()
+        polar_fix.append(polar[0])
+        polar_fix.append(degrees(polar[1]))
+        return polar_fix
+
+    def polar2rect(r,phi=0):
+        """
+        Output: class <complex>
+        """
+        if isinstance(r,tuple):
+            return rect(r[0],r[1])
+        return rect(r,phi)
+
+    def rect2polar(z):
+        """
+        Polar cannot do math.
+        Output: class <tuple>
+        """
+        return polar(z)
+
+    def cos2Phasor(A,phi):
+        return A, phi
+
+    def sin2Phasor(A,phi):
+        if A < 0:
+            return cos2Phasor(-A, phi + radians(90))
+        else:
+            return A, phi-radians(90)
+
 if __name__ == "__main__":
-    pass
+    z = complexEq()
+    z.rect = complex(5,4)
+    print(z.rect)
 

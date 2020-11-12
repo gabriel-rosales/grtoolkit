@@ -92,60 +92,45 @@ def w(f):
 # v(t) = Re(Vm*cos(w*t+phi))
 # V is used as the phasor representation of v(t)
 
-# USE cmath? http://ibiblio.org/kuphaldt/socratic/model/mod_phasor.pdf
-# >>> from math import *
-# >>> from cmath import *
-# >>> r = complex(400,0)
-# >>> f = 60.0
-# >>> xc = 1/(2 * pi * f * 4.7e-6)
-# >>> zc = complex(0,-xc)
-# >>> xl = 2 * pi * f * 1.0
-# >>> zl = complex(0,xl)
-# >>> r + zc + zl
-# (400-187.38811239154882j)
-# >>> 1/(1/r + 1/zc + 1/zl)
-# (355.837695813625+125.35793777619385j)
-# >>> polar(r + zc + zl)
-# (441.717448903332, -0.4381072059213295)
-# >>> abs(r + zc + zl)
-# 441.717448903332
-# >>> phase(r + zc + zl)
-# -0.4381072059213295
-# >>> degrees(phase(r + zc + zl))
-# -25.10169387356105
-
-def polar_deg_view(polar):
+class signal:
     """
-    Does not return actual polar as actual polar needs to be in radians. 
-    For viewing ONLY.
+    Types: "rect" "polar_rad" "polar_deg" 
+    https://docs.python.org/2/reference/datamodel.html#emulating-numeric-types
     """
-    polar_fix = list()
-    polar_fix.append(polar[0])
-    polar_fix.append(degrees(polar[1]))
-    return polar_fix
+    def __init__(self, val=complex(0,0), format="rect"):
+        """
+        Types: "rect" "polar_rad" "polar_deg" "wave_deg" "wave_rad"
 
-# def sinusoid2phasor():
-#     pass
+        Input:
+            rect: val = complex(0,0)
+            polar_rad = (A,phi_rad)
+            polar_deg = (A, phi_deg)
+            wave = (A, "cos", w, phi) or (A, "sin", w, phi)
 
-# def cos2Phasor(A,phi):
-#     return polar()
+        """
 
-def polar2rect(r,phi):
-    return rect(r,phi)
-
-def rect2polar(z):
-    return polar(z)
-
-#Sinusoid-phasor transformation
-# A*cos(wt+phi) = A angle(phi)
-# A*sin(wt+phi) = A angle(phi - 90)
-
-class complexEq:
-    def __init__(self):
-        # self.rect = None
-        # self.polar = None
-        # self.sinusoid = None
-        pass
+        if format == "rect":
+            self.rect = val
+        elif format == "polar_rad":
+            self.polar_rad = val
+        elif format == "polar_deg":
+            self.polar_deg = val
+        elif "wave" in format:
+            self.wave_original = val
+            self.wave_original_type = format
+            phasor = ()
+            val = list(val)
+            if "deg" in format:
+                val[3] = radians(val[3])
+            if val[1] == "cos":
+                phasor = self.__cos2Phasor(val[0], val[3])
+            elif val[1] == "sin":
+                phasor = self.__sin2Phasor(val[0], val[3])
+            else:
+                raise 'Not a valid sinusoid. Format must be (A, "cos", w, phi) or (A, "cos", w, phi)'
+            self.polar_rad = (phasor[0], phasor[1])
+        else:
+            raise 'type must be: "rect" "polar_rad" "polar_deg"'
 
     @property
     def rect(self):
@@ -153,58 +138,136 @@ class complexEq:
     @rect.setter
     def rect(self, val):
         self._rect = val
+        self._polar_rad = self.__rect2polar(self._rect)
+        self._polar_deg = self.__polar_deg_view()
 
     @property
-    def polar(self):
-        return self.polar
-    @polar.setter
-    def polar(self, val):
-        self.polar = val
+    def polar_rad(self):
+        return self._polar_rad
+    @polar_rad.setter
+    def polar_rad(self, val):
+        self._polar_rad = val
+        self._polar_deg = self.__polar_deg_view()
+        self._rect = self.__polar2rect(self._polar_rad)
 
-    @property
-    def sinusoid(self):
-        return self.sinusoid
-    @sinusoid.setter
-    def sinusoid(self, val):
-        self.sinusoid = val
-
-
-    def polar_deg_view(polar):
+    def __polar_deg_view(self):
         """
         Does not return actual polar as actual polar needs to be in radians. 
         For viewing ONLY.
         """
+        polar = self._polar_rad
         polar_fix = list()
         polar_fix.append(polar[0])
         polar_fix.append(degrees(polar[1]))
         return polar_fix
 
-    def polar2rect(r,phi=0):
+    @property
+    def polar_deg(self):
+        return self._polar_deg
+    @polar_deg.setter
+    def polar_deg(self, val):
+        self._polar_deg = val
+        self._polar_rad = self.__polar_rad_view()
+        self._rect = self.__polar2rect(self._polar_rad)
+
+    @property
+    def sinusoid(self):
+        return self._sinusoid
+    @sinusoid.setter
+    def sinusoid(self, val):
+        self._sinusoid = val
+
+    def __polar2rect(self, r,phi=0):
         """
         Output: class <complex>
         """
-        if isinstance(r,tuple):
+        if isinstance(r,tuple) or isinstance(r,list):
             return rect(r[0],r[1])
         return rect(r,phi)
 
-    def rect2polar(z):
+    def __rect2polar(self,z):
         """
         Polar cannot do math.
         Output: class <tuple>
         """
         return polar(z)
 
-    def cos2Phasor(A,phi):
-        return A, phi
+    def __polar_rad_view(self):
+        """
+        Does not return actual polar as actual polar needs to be in radians. 
+        For viewing ONLY.
+        """
+        polar = self._polar_deg
+        polar_fix = list()
+        polar_fix.append(polar[0])
+        polar_fix.append(radians(polar[1]))
+        return polar_fix
 
-    def sin2Phasor(A,phi):
+    def __cos2Phasor(self, A,phi):
+        """
+        Format: A*cos(wt+phi)
+        Output: [A, phi] which represents polar form A angle(phi)
+        """
         if A < 0:
-            return cos2Phasor(-A, phi + radians(90))
+            return self.__cos2Phasor(-A, phi+radians(180))
+        else:
+            return A, phi
+    def __sin2Phasor(self, A, phi):
+        if A < 0:
+            return self.__sin2Phasor(-A, phi+radians(180))
         else:
             return A, phi-radians(90)
 
-if __name__ == "__main__":
-    z = complexEq()
-    z.rect = complex(5,4)
-    print(z.rect)
+    def sin_wave(self, format="rad"):
+        if format == "deg":
+            return f"{self._polar_rad[0]} sin (wt * {degrees(self.polar_rad[1]-radians(90))})"
+        return f"{self._polar_rad[0]} sin (wt * {self.polar_rad[1]-radians(90)})"
 
+    def cos_wave(self, format="rad"):
+        if format == "deg":
+            return f"{self._polar_rad[0]} cos (wt * {degrees(self.polar_rad[1])})"
+        return f"{self._polar_rad[0]} cos (wt * {self.polar_rad[1]})"
+
+    def __add__(self,other):
+        return signal(self._rect + other._rect)
+    def __radd__(self, other):
+        return self.__add__(other)
+
+
+    def __sub__(self,other):
+        return signal(self._rect - other._rect)
+    def __rsub__(self, other):
+        #Doesn't work?
+        return other - self._rect
+
+    def __mul__(self,other):
+        return signal(self._rect * other._rect)
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    def __truediv__(self,other):
+        return signal(self._rect / other._rect)
+    def __rtruediv__(self,other):
+        # return signal(other / self._rect)
+        return other / self._rect
+
+    def __pow__(self,other):
+        # return signal(other / self._rect)
+        return signal(self.rect**(other))
+
+    def sqrt(self):
+        return signal(self.rect**(1/2))
+
+## NOTE: 
+# DERIVATIVE 
+# dv/dt      ==      jwV
+# time domain    frquency domain
+
+# INTEGRAL
+# integrate(v,t)    ==    V/jw
+# time domain          frquency domain
+
+
+if __name__ == "__main__":
+    z1 = signal((40,50), format="polar_rad")
+    z2 = signal((20,-30), format="polar_deg")

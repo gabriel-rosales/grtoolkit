@@ -14,3 +14,4 @@ def bulkStress(dp, dV, V0):
     # B = bulk stress / bulk strain
     B = dp/(dV/V0)
     return B
+

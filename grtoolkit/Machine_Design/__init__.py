@@ -103,13 +103,13 @@ def S_ys(find="S_ys", printEqs=True, **kwargs):
     eq.append("Eq(S_ys, 0.577*Sy") #Approximation
     return solveEqs(eq, find=find, printEq=printEqs, **kwargs)
 
-def U0(find="U_0", printEqs=True, **kwargs):
+def U_0(find="U_0", printEqs=True, **kwargs):
     """
     Strain energy density
     Energy absorbtion capacity if a load is suddenly applied. 
 
     Where:
-        U0 = strain energy density per unit volume
+        U_0 = strain energy density per unit volume
         sigma = stress
         epsilon = strain
     """
@@ -117,16 +117,42 @@ def U0(find="U_0", printEqs=True, **kwargs):
     eq.append("Eq(U_0, integrate(sigma,(sigma,0,epsilon))") #Approximation
     return solveEqs(eq, find=find, printEq=printEqs, **kwargs)
 
-# def UR(find="UR", printEqs=True, **kwargs):
-#     """
-#     Strain energy density
-#     Energy absorbtion capacity if a load is suddenly applied. 
+def U_R(find="U_R", printEqs=True, **kwargs):
+    """
+    Resilience
+    Where:
+        U0 = strain energy density per unit volume
+        sigma = stress
+        epsilon = strain
+    """
+    eq = list()
+    eq.append("Eq(U_R, integrate(sigma, (epsilon, 0, epsilon_el)))") #Approximation
+    eq.append("Eq(U_R, 0.5*S_y**2/E") #Approximation
+    return solveEqs(eq, find=find, printEq=printEqs, **kwargs)
 
-#     Where:
-#         U0 = strain energy density per unit volume
-#         sigma = stress
-#         epsilon = strain
-#     """
-#     eq = list()
-#     eq.append("Eq(U0, integrate(sigma,(sigma,0,epsilon))") #Approximation
-#     return solveEqs(eq, find=find, printEq=printEqs, **kwargs)
+def U_T(find="U_T", printEqs=True, **kwargs):
+    """
+    Toughness
+    The ability of a material to absorb energy without fracture
+    Where:
+        U0 = strain energy density per unit volume
+        sigma = stress
+        epsilon = strain
+    """
+    eq = list()
+    eq.append("Eq(U_T, integrate(sigma, (epsilon, 0, epsilon_f)))") #Approximation
+    eq.append("Eq(U_T,((S_y + S_ut)/2))*epsilon_f)") #Approximation
+    return solveEqs(eq, find=find, printEq=printEqs, **kwargs)
+
+def S_ut(find="S_ut", printEqs=True, **kwargs):
+    """
+    Ultimate tensile strength 
+
+    Where:
+        HB = Brinnel Hardness
+    """
+    eq = list()
+    eq.append("Eq(S_ut, 500*HB +/- 30*HB)") #psi; approx
+    eq.append("Eq(S_ut,3.45*HB +/- 0.2*HB") #MPa; approx
+    return solveEqs(eq, find=find, printEq=printEqs, **kwargs)
+
